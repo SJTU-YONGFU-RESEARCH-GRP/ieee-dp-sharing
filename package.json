@@ -1,0 +1,23 @@
+{
+  "name": "ieee-dp-sharing",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "validate": "python3 scripts/validate.py",
+    "enrich": "python3 scripts/enrich.py",
+    "check": "npm run validate && npm run build",
+    "pipeline": "bash scripts/daily-pipeline.sh",
+    "pipeline:dry": "bash scripts/daily-pipeline.sh --dry-run"
+  },
+  "dependencies": {
+    "astro": "^5.7.0"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.4",
+    "typescript": "^5.8.3"
+  }
+}

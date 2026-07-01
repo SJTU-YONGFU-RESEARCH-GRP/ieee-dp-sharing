@@ -1,0 +1,209 @@
+---
+import type { Entry } from '../lib/types';
+import { getUniqueValues, getYears } from '../lib/entries';
+
+interface Props {
+  entries: Entry[];
+}
+
+const { entries } = Astro.props;
+
+const events = getUniqueValues(entries, 'event');
+const societies = getUniqueValues(entries, 'society');
+const topics = getUniqueValues(entries, 'dataset_topic');
+const years = getYears(entries);
+const sentiments = ['positive', 'mixed', 'neutral', 'negative'];
+const postTypes = getUniqueValues(entries, 'post_type');
+const regions = getUniqueValues(entries, 'region');
+---
+
+<section class="panel filters" id="filters">
+  <div class="filter-header">
+    <h2>Filter reflections</h2>
+    <button type="button" class="clear-btn" data-clear-filters>Clear</button>
+  </div>
+  <div class="filter-grid">
+    <label>
+      Search
+      <input type="search" name="query" placeholder="Keywords, names, topics…" data-filter="query" />
+    </label>
+    <label>
+      Event
+      <select data-filter="event">
+        <option value="">All events</option>
+        {events.map((v) => <option value={v}>{v}</option>)}
+      </select>
+    </label>
+    <label>
+      Society
+      <select data-filter="society">
+        <option value="">All societies</option>
+        {societies.map((v) => <option value={v}>{v}</option>)}
+      </select>
+    </label>
+    <label>
+      Region
+      <select data-filter="region">
+        <option value="">All regions</option>
+        {regions.map((v) => <option value={v}>{v}</option>)}
+      </select>
+    </label>
+    <label>
+      Dataset topic
+      <select data-filter="topic">
+        <option value="">All topics</option>
+        {topics.map((v) => <option value={v}>{v}</option>)}
+      </select>
+    </label>
+    <label>
+      Year
+      <select data-filter="year">
+        <option value="">All years</option>
+        {years.map((v) => <option value={v}>{v}</option>)}
+      </select>
+    </label>
+    <label>
+      Post type
+      <select data-filter="postType">
+        <option value="">All types</option>
+        {postTypes.map((v) => <option value={v}>{v}</option>)}
+      </select>
+    </label>
+    <label>
+      Sentiment
+      <select data-filter="sentiment">
+        <option value="">All sentiments</option>
+        {sentiments.map((v) => <option value={v}>{v}</option>)}
+      </select>
+    </label>
+  </div>
+  <p class="result-count"><span data-result-count>{entries.length}</span> reflections shown</p>
+</section>
+
+<script>
+  const cards = Array.from(document.querySelectorAll<HTMLElement>('.entry-wrap[data-entry-id]'));
+  const countEl = document.querySelector<HTMLElement>('[data-result-count]');
+  const inputs = Array.from(document.querySelectorAll<HTMLElement>('[data-filter]'));
+  const clearBtn = document.querySelector<HTMLButtonElement>('[data-clear-filters]');
+
+  function getFilters(): Record<string, string> {
+    const filters: Record<string, string> = {};
+    for (const el of inputs) {
+      const key = el.getAttribute('data-filter')!;
+      const value =
+        el instanceof HTMLInputElement || el instanceof HTMLSelectElement
+          ? el.value.trim()
+          : '';
+      filters[key] = value;
+    }
+    return filters;
+  }
+
+  function matches(card: HTMLElement, filters: Record<string, string>): boolean {
+    const dataset = card.dataset;
+    const haystack = [
+      dataset.text,
+      dataset.name,
+      dataset.affiliation,
+      dataset.event,
+      dataset.society,
+      dataset.topic,
+      dataset.tags,
+      dataset.topics,
+    ]
+      .filter(Boolean)
+      .join(' ')
+      .toLowerCase();
+
+    if (filters.event && dataset.event !== filters.event) return false;
+    if (filters.society && dataset.society !== filters.society) return false;
+    if (filters.region && dataset.region !== filters.region) return false;
+    if (filters.topic && dataset.topic !== filters.topic) return false;
+    if (filters.year && dataset.year !== filters.year) return false;
+    if (filters.postType && dataset.postType !== filters.postType) return false;
+    if (filters.sentiment && dataset.sentiment !== filters.sentiment) return false;
+    if (filters.query && !haystack.includes(filters.query.toLowerCase())) return false;
+    return true;
+  }
+
+  function applyFilters() {
+    const filters = getFilters();
+    let visible = 0;
+    for (const card of cards) {
+      const show = matches(card, filters);
+      card.style.display = show ? '' : 'none';
+      if (show) visible += 1;
+    }
+    if (countEl) countEl.textContent = String(visible);
+  }
+
+  for (const el of inputs) {
+    el.addEventListener('input', applyFilters);
+    el.addEventListener('change', applyFilters);
+  }
+
+  clearBtn?.addEventListener('click', () => {
+    for (const el of inputs) {
+      if (el instanceof HTMLInputElement || el instanceof HTMLSelectElement) {
+        el.value = '';
+      }
+    }
+    applyFilters();
+  });
+</script>
+
+<style>
+  .filter-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .filter-header h2 {
+    margin: 0;
+    font-size: 1.1rem;
+  }
+
+  .clear-btn {
+    border: 1px solid var(--border);
+    background: white;
+    border-radius: 8px;
+    padding: 0.35rem 0.75rem;
+    cursor: pointer;
+    color: var(--muted);
+    font-weight: 600;
+  }
+
+  .filter-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 0.85rem;
+  }
+
+  label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--muted);
+  }
+
+  input,
+  select {
+    font: inherit;
+    padding: 0.5rem 0.6rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: white;
+    color: var(--text);
+  }
+
+  .result-count {
+    margin: 1rem 0 0;
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+</style>

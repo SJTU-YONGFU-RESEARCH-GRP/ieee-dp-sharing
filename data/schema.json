@@ -1,0 +1,135 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ieee-dataport.github.io/ieee-dp-sharing/schema/entry.json",
+  "title": "IEEE DataPort Engagement Entry",
+  "description": "Curated testimonial or comment with consent and moderation metadata.",
+  "type": "object",
+  "required": [
+    "id",
+    "text",
+    "display_name",
+    "source_type",
+    "source_url",
+    "consent_status",
+    "moderation_status",
+    "submitted_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$",
+      "description": "Stable slug, e.g. jane-doe-ispd-2025"
+    },
+    "text": {
+      "type": "string",
+      "minLength": 10,
+      "maxLength": 5000
+    },
+    "display_name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "affiliation": {
+      "type": ["string", "null"],
+      "maxLength": 200
+    },
+    "profile_url": {
+      "type": ["string", "null"],
+      "format": "uri"
+    },
+    "source_type": {
+      "type": "string",
+      "enum": ["linkedin_post", "linkedin_comment", "manual_submission", "event_feedback", "email_consented"]
+    },
+    "source_url": {
+      "type": ["string", "null"],
+      "format": "uri",
+      "description": "Public post URL when available"
+    },
+    "event": {
+      "type": ["string", "null"],
+      "maxLength": 120
+    },
+    "society": {
+      "type": ["string", "null"],
+      "maxLength": 120
+    },
+    "region": {
+      "type": ["string", "null"],
+      "enum": [null, "North America", "Europe", "Asia-Pacific", "Latin America", "Middle East & Africa", "Global"]
+    },
+    "dataset_topic": {
+      "type": ["string", "null"],
+      "maxLength": 120
+    },
+    "post_type": {
+      "type": ["string", "null"],
+      "enum": [null, "testimonial", "discussion", "announcement", "question", "feedback"]
+    },
+    "consent_status": {
+      "type": "string",
+      "enum": ["pending", "granted", "revoked"]
+    },
+    "consent_note": {
+      "type": ["string", "null"],
+      "maxLength": 500
+    },
+    "moderation_status": {
+      "type": "string",
+      "enum": ["draft", "pending", "approved", "rejected"]
+    },
+    "approved_by": {
+      "type": ["string", "null"],
+      "maxLength": 120
+    },
+    "approved_at": {
+      "type": ["string", "null"],
+      "format": "date"
+    },
+    "submitted_at": {
+      "type": "string",
+      "format": "date"
+    },
+    "published_at": {
+      "type": ["string", "null"],
+      "format": "date"
+    },
+    "featured": {
+      "type": "boolean",
+      "default": false
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string", "maxLength": 60 },
+      "uniqueItems": true
+    },
+    "enrichment": {
+      "type": ["object", "null"],
+      "properties": {
+        "sentiment": {
+          "type": "string",
+          "enum": ["positive", "neutral", "mixed", "negative"]
+        },
+        "sentiment_score": {
+          "type": "number",
+          "minimum": -1,
+          "maximum": 1
+        },
+        "topics": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "quote": {
+          "type": ["string", "null"],
+          "maxLength": 300
+        },
+        "enriched_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

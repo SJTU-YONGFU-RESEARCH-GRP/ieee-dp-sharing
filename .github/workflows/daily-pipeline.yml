@@ -1,0 +1,43 @@
+# Daily data refresh pipeline (website-trial-v1 style).
+#
+# Runs scripts/daily-pipeline.sh on a schedule:
+#   enrich → validate → build → commit data/ → push
+#
+# Push to main triggers deploy-pages.yml automatically.
+
+name: Daily pipeline
+
+on:
+  schedule:
+    # 06:00 UTC every day
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  pipeline:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Run daily pipeline
+        env:
+          GH_PAGES_BASE: ${{ github.event.repository.name }}
+          BASE_PATH: /${{ github.event.repository.name }}/
+          LINKEDIN_ACCESS_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
+          LINKEDIN_ORG_URN: ${{ secrets.LINKEDIN_ORG_URN }}
+          GIT_USER_NAME: github-actions[bot]
+          GIT_USER_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
+        run: |
+          chmod +x scripts/daily-pipeline.sh
+          ./scripts/daily-pipeline.sh "chore: daily enrichment refresh"

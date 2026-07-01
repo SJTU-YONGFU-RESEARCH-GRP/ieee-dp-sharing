@@ -1,0 +1,59 @@
+# GitHub Pages: build Astro app at repo root and deploy dist/
+#
+# Triggered by push to main/master (including daily-pipeline.yml commits).
+#
+# Site URL: https://<org>.github.io/<repo>/
+#
+# Setup (once): Settings → Pages → Build and deployment → Source: GitHub Actions
+
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Validate entries
+        run: python3 scripts/validate.py
+
+      - name: Install and build
+        run: npm ci && npm run build
+        env:
+          NODE_ENV: production
+          GH_PAGES_BASE: ${{ github.event.repository.name }}
+          BASE_PATH: /${{ github.event.repository.name }}/
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

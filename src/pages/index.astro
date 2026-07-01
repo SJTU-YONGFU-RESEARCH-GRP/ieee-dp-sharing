@@ -1,0 +1,106 @@
+---
+import Layout from '../layouts/Layout.astro';
+import FilterBar from '../components/FilterBar.astro';
+import TestimonialCard from '../components/TestimonialCard.astro';
+import {
+  getPublishedEntries,
+  getPendingCount,
+  getDataMeta,
+} from '../lib/entries';
+
+const published = getPublishedEntries().sort((a, b) => {
+  if (a.featured !== b.featured) return a.featured ? -1 : 1;
+  return (b.published_at ?? '').localeCompare(a.published_at ?? '');
+});
+const pending = getPendingCount();
+const meta = getDataMeta();
+const featuredCount = published.filter((e) => e.featured).length;
+---
+
+<Layout>
+  <section class="hero">
+    <h1>IEEE DataPort Member Voices</h1>
+    <p>
+      A curated showcase of public reflections, testimonials, and discussion
+      comments from IEEE members—with consent-based attribution and semantic
+      insights about how researchers use DataPort.
+    </p>
+  </section>
+
+  <section class="stats-row">
+    <div class="stat-card">
+      <strong>{published.length}</strong>
+      <span>Published reflections</span>
+    </div>
+    <div class="stat-card">
+      <strong>{featuredCount}</strong>
+      <span>Featured voices</span>
+    </div>
+    <div class="stat-card">
+      <strong>{pending}</strong>
+      <span>Pending moderation</span>
+    </div>
+    <div class="stat-card">
+      <strong>{meta.updated_at}</strong>
+      <span>Dataset updated</span>
+    </div>
+  </section>
+
+  <FilterBar entries={published} />
+
+  <section class="all-entries">
+    <h2>All published reflections</h2>
+  {published.length === 0 ? (
+    <p class="empty">No approved entries yet. Add content via <a href={`${import.meta.env.BASE_URL}submit/`}>Submit</a>.</p>
+  ) : (
+    <div class="entry-grid">
+      {published.map((entry) => (
+        <div
+          class="entry-wrap"
+          data-entry-id={entry.id}
+          data-text={entry.text}
+          data-name={entry.display_name}
+          data-affiliation={entry.affiliation ?? ''}
+          data-event={entry.event ?? ''}
+          data-society={entry.society ?? ''}
+          data-region={entry.region ?? ''}
+          data-topic={entry.dataset_topic ?? ''}
+          data-year={(entry.published_at ?? entry.submitted_at).slice(0, 4)}
+          data-post-type={entry.post_type ?? ''}
+          data-sentiment={entry.enrichment?.sentiment ?? ''}
+          data-tags={(entry.tags ?? []).join(' ')}
+          data-topics={(entry.enrichment?.topics ?? []).join(' ')}
+        >
+          <TestimonialCard entry={entry} />
+        </div>
+      ))}
+    </div>
+  )}
+  </section>
+</Layout>
+
+<style>
+  h2 {
+    margin: 0 0 1rem;
+    font-size: 1.25rem;
+  }
+
+  .featured-section {
+    margin-bottom: 2rem;
+  }
+
+  .entry-grid {
+    display: grid;
+    gap: 1rem;
+  }
+
+  @media (min-width: 760px) {
+    .entry-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .all-entries {
+    margin-top: 0.5rem;
+  }
+</style>

@@ -1,0 +1,292 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { REGIONS, POST_TYPES, SOURCE_TYPES } from '../lib/types';
+---
+
+<Layout
+  title="Submit · IEEE DataPort Member Voices"
+  description="Submit a testimonial or LinkedIn reflection for editorial review."
+>
+  <section class="hero">
+    <h1>Submit a reflection</h1>
+    <p>
+      Share a public testimonial, event comment, or LinkedIn post URL. Submissions
+      enter a moderation queue and are published only after consent and editorial
+      approval.
+    </p>
+  </section>
+
+  <form class="panel submit-form" id="submit-form">
+    <div class="form-grid">
+      <label>
+        Full name *
+        <input name="display_name" required maxlength="120" />
+      </label>
+      <label>
+        Affiliation
+        <input name="affiliation" maxlength="200" placeholder="University or organization" />
+      </label>
+      <label class="full">
+        Reflection text *
+        <textarea name="text" required minlength="10" maxlength="5000" rows="5" placeholder="What would you like to share about IEEE DataPort?"></textarea>
+      </label>
+      <label>
+        Source type *
+        <select name="source_type" required>
+          {SOURCE_TYPES.map((t) => (
+            <option value={t}>{t.replaceAll('_', ' ')}</option>
+          ))}
+        </select>
+      </label>
+      <label>
+        Public source URL
+        <input name="source_url" type="url" placeholder="https://www.linkedin.com/posts/..." />
+      </label>
+      <label>
+        Post type
+        <select name="post_type">
+          <option value="">—</option>
+          {POST_TYPES.map((t) => (
+            <option value={t}>{t}</option>
+          ))}
+        </select>
+      </label>
+      <label>
+        Event
+        <input name="event" maxlength="120" />
+      </label>
+      <label>
+        IEEE society
+        <input name="society" maxlength="120" />
+      </label>
+      <label>
+        Region
+        <select name="region">
+          <option value="">—</option>
+          {REGIONS.map((r) => (
+            <option value={r}>{r}</option>
+          ))}
+        </select>
+      </label>
+      <label>
+        Dataset topic
+        <input name="dataset_topic" maxlength="120" />
+      </label>
+      <label>
+        Tags (comma-separated)
+        <input name="tags" placeholder="reproducibility, citation" />
+      </label>
+      <label class="full consent">
+        <input type="checkbox" name="consent" required />
+        <span>
+          I confirm this content is public, accurate, and I consent to IEEE
+          DataPort republishing it with the attribution above.
+        </span>
+      </label>
+    </div>
+
+    <div class="actions">
+      <button type="submit">Generate JSON for PR</button>
+      <button type="button" class="secondary" id="download-json">Download JSON</button>
+    </div>
+  </form>
+
+  <section class="panel output-panel" id="output-panel" hidden>
+    <h2>Next steps</h2>
+    <p class="muted">
+      Copy this JSON into <code>data/entries.json</code> (or append as a new object in the
+      <code>entries</code> array), then open a pull request. An editor will set
+      <code>moderation_status</code> to <code>approved</code> before it goes live.
+    </p>
+    <pre id="json-output"></pre>
+    <button type="button" id="copy-json">Copy JSON</button>
+  </section>
+
+  <section class="panel">
+    <h2>Moderation fields (editor)</h2>
+    <p class="muted">Submissions are created with these defaults:</p>
+    <ul>
+      <li><code>consent_status</code>: <code>granted</code> (if checkbox checked) or <code>pending</code></li>
+      <li><code>moderation_status</code>: <code>pending</code></li>
+      <li><code>approved_by</code> / <code>approved_at</code> / <code>published_at</code>: set by editor on approval</li>
+    </ul>
+  </section>
+</Layout>
+
+<script>
+  const form = document.getElementById('submit-form') as HTMLFormElement;
+  const outputPanel = document.getElementById('output-panel') as HTMLElement;
+  const jsonOutput = document.getElementById('json-output') as HTMLPreElement;
+  const copyBtn = document.getElementById('copy-json') as HTMLButtonElement;
+  const downloadBtn = document.getElementById('download-json') as HTMLButtonElement;
+
+  let latestJson = '';
+
+  function slugify(text: string): string {
+    return text
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-|-$/g, '')
+      .slice(0, 60);
+  }
+
+  function buildEntry(formData: FormData) {
+    const name = String(formData.get('display_name') ?? '').trim();
+    const text = String(formData.get('text') ?? '').trim();
+    const tagsRaw = String(formData.get('tags') ?? '').trim();
+    const tags = tagsRaw
+      ? tagsRaw.split(',').map((t) => t.trim()).filter(Boolean)
+      : [];
+    const consent = formData.get('consent') === 'on';
+    const today = new Date().toISOString().slice(0, 10);
+    const id = `${slugify(name)}-${today}`;
+
+    const nullable = (key: string) => {
+      const v = String(formData.get(key) ?? '').trim();
+      return v || null;
+    };
+
+    return {
+      id,
+      text,
+      display_name: name,
+      affiliation: nullable('affiliation'),
+      profile_url: null,
+      source_type: String(formData.get('source_type')),
+      source_url: nullable('source_url'),
+      event: nullable('event'),
+      society: nullable('society'),
+      region: nullable('region'),
+      dataset_topic: nullable('dataset_topic'),
+      post_type: nullable('post_type'),
+      consent_status: consent ? 'granted' : 'pending',
+      consent_note: consent ? 'Submitted via website form with display consent.' : null,
+      moderation_status: 'pending',
+      approved_by: null,
+      approved_at: null,
+      submitted_at: today,
+      published_at: null,
+      featured: false,
+      tags,
+      enrichment: null,
+    };
+  }
+
+  function showJson(entry: object) {
+    latestJson = JSON.stringify(entry, null, 2);
+    jsonOutput.textContent = latestJson;
+    outputPanel.hidden = false;
+    outputPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const entry = buildEntry(new FormData(form));
+    showJson(entry);
+  });
+
+  downloadBtn.addEventListener('click', () => {
+    const entry = buildEntry(new FormData(form));
+    latestJson = JSON.stringify(entry, null, 2);
+    const blob = new Blob([latestJson], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${entry.id}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+
+  copyBtn.addEventListener('click', async () => {
+    if (!latestJson) return;
+    await navigator.clipboard.writeText(latestJson);
+    copyBtn.textContent = 'Copied!';
+    setTimeout(() => {
+      copyBtn.textContent = 'Copy JSON';
+    }, 1500);
+  });
+</script>
+
+<style>
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+  }
+
+  .full {
+    grid-column: 1 / -1;
+  }
+
+  label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--muted);
+  }
+
+  .consent {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 0.6rem;
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  input,
+  select,
+  textarea {
+    font: inherit;
+    padding: 0.55rem 0.65rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: white;
+    color: var(--text);
+  }
+
+  textarea {
+    resize: vertical;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1.25rem;
+  }
+
+  button {
+    font: inherit;
+    font-weight: 700;
+    border: none;
+    border-radius: 8px;
+    padding: 0.65rem 1rem;
+    cursor: pointer;
+    background: var(--accent);
+    color: white;
+  }
+
+  button.secondary {
+    background: white;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+  }
+
+  .output-panel pre {
+    background: #0f1722;
+    color: #e8eef7;
+    padding: 1rem;
+    border-radius: 8px;
+    overflow-x: auto;
+    font-size: 0.82rem;
+    line-height: 1.45;
+  }
+
+  .output-panel ul {
+    margin: 0;
+    padding-left: 1.2rem;
+    color: var(--muted);
+  }
+</style>

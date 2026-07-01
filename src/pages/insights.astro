@@ -1,0 +1,54 @@
+---
+import Layout from '../layouts/Layout.astro';
+import InsightsPanel from '../components/InsightsPanel.astro';
+import {
+  aggregateSentiments,
+  aggregateTopics,
+  getPublishedEntries,
+} from '../lib/entries';
+
+const published = getPublishedEntries();
+const topics = aggregateTopics(published);
+const sentiments = aggregateSentiments(published);
+---
+
+<Layout
+  title="Insights · IEEE DataPort Member Voices"
+  description="Semantic insights from curated IEEE DataPort member feedback."
+>
+  <section class="hero">
+    <h1>Feedback insights</h1>
+    <p>
+      Topic and sentiment summaries derived from approved, consented member
+      reflections. Enrichment runs automatically in the daily build pipeline.
+    </p>
+  </section>
+
+  {published.length === 0 ? (
+    <p class="empty">No published data to analyze yet.</p>
+  ) : (
+    <InsightsPanel topics={topics} sentiments={sentiments} total={published.length} />
+  )}
+
+  <section class="panel methodology">
+    <h2>How analysis works</h2>
+    <ul>
+      <li>Only <strong>approved</strong> entries with <strong>granted consent</strong> are included.</li>
+      <li>Topics are detected via keyword rules in <code>scripts/enrich.py</code> (extensible).</li>
+      <li>Sentiment is a lightweight lexical classifier—not a substitute for human review.</li>
+      <li>Editors approve all content before publication; automation never bypasses moderation.</li>
+    </ul>
+  </section>
+</Layout>
+
+<style>
+  .methodology ul {
+    margin: 0.5rem 0 0;
+    padding-left: 1.2rem;
+    color: var(--muted);
+  }
+
+  .methodology li + li {
+    margin-top: 0.4rem;
+  }
+</style>

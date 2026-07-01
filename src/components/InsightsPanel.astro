@@ -1,0 +1,109 @@
+---
+import type { SentimentCount, TopicCount } from '../lib/entries';
+import { TOPIC_LABELS } from '../lib/types';
+
+interface Props {
+  topics: TopicCount[];
+  sentiments: SentimentCount[];
+  total: number;
+}
+
+const { topics, sentiments, total } = Astro.props;
+const maxTopic = topics[0]?.count ?? 1;
+---
+
+<section class="grid two-col insights-grid">
+  <div class="panel">
+    <h2>Topic themes</h2>
+    <p class="muted">Aggregated from approved member feedback</p>
+    <ul class="bar-list">
+      {topics.map(({ topic, count }) => (
+        <li>
+          <div class="bar-label">
+            <span>{TOPIC_LABELS[topic] ?? topic}</span>
+            <strong>{count}</strong>
+          </div>
+          <div class="bar-track">
+            <div class="bar-fill" style={`width: ${(count / maxTopic) * 100}%`} />
+          </div>
+        </li>
+      ))}
+    </ul>
+  </div>
+
+  <div class="panel">
+    <h2>Sentiment overview</h2>
+    <p class="muted">{total} published reflections analyzed</p>
+    <ul class="sentiment-list">
+      {sentiments.map(({ sentiment, count }) => (
+        <li>
+          <span class={`badge ${sentiment}`}>{sentiment}</span>
+          <span class="count">{count}</span>
+          <span class="pct">{total ? Math.round((count / total) * 100) : 0}%</span>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .insights-grid h2 {
+    margin: 0 0 0.25rem;
+    font-size: 1.15rem;
+  }
+
+  .bar-list,
+  .sentiment-list {
+    list-style: none;
+    margin: 1rem 0 0;
+    padding: 0;
+  }
+
+  .bar-list li + li {
+    margin-top: 0.85rem;
+  }
+
+  .bar-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.92rem;
+    margin-bottom: 0.3rem;
+  }
+
+  .bar-track {
+    height: 8px;
+    background: #edf2f7;
+    border-radius: 999px;
+    overflow: hidden;
+  }
+
+  .bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #00629b, #3d9ccc);
+    border-radius: 999px;
+  }
+
+  .sentiment-list li {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.55rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .sentiment-list li:last-child {
+    border-bottom: none;
+  }
+
+  .count {
+    font-weight: 700;
+  }
+
+  .pct {
+    color: var(--muted);
+    font-size: 0.9rem;
+    min-width: 3ch;
+    text-align: right;
+  }
+</style>
