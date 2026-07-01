@@ -154,6 +154,10 @@ run python3 scripts/score_entries.py --apply
 echo "==> [enrich] scripts/enrich.py"
 run python3 scripts/enrich.py
 
+echo "==> [status] scripts/update_pipeline_status.py"
+run bash -c "date -u +%Y-%m-%dT%H:%M:%SZ > data/.deploy-stamp"
+run python3 scripts/update_pipeline_status.py
+
 echo "==> [validate] scripts/validate.py"
 run python3 scripts/validate.py
 
@@ -195,7 +199,7 @@ GIT_TOPLEVEL="$(git rev-parse --show-toplevel)"
 cd "$GIT_TOPLEVEL"
 
 echo "==> [git] stage data changes"
-run git add data/entries.json data/linkedin-staging.csv data/blocklist.json data/removal-log.json data/.deploy-stamp data/linkedin-staging.json 2>/dev/null || run git add data/entries.json data/linkedin-staging.csv data/blocklist.json data/removal-log.json data/.deploy-stamp
+run git add data/entries.json data/linkedin-staging.csv data/blocklist.json data/removal-log.json data/pipeline-status.json data/.deploy-stamp data/linkedin-staging.json 2>/dev/null || run git add data/entries.json data/linkedin-staging.csv data/blocklist.json data/removal-log.json data/pipeline-status.json data/.deploy-stamp
 
 if [[ "$DRY_RUN" -eq 1 ]]; then
   run git status --short

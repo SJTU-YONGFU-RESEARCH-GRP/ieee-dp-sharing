@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import FilterBar from '../components/FilterBar.astro';
+import PipelineStatus from '../components/PipelineStatus.astro';
 import TestimonialCard from '../components/TestimonialCard.astro';
 import {
   getPublishedEntries,
@@ -27,12 +28,14 @@ const featuredCount = published.filter((e) => e.featured).length;
     </p>
     {published.length === 0 && (
       <p class="hashtag-note">
-        No published reflections yet. Add rows to
-        <code>data/linkedin-staging.csv</code> from your <strong>#ieeedataport</strong>
-        review — the daily pipeline merges, auto-publishes, and deploys.
+        Add rows to <code>data/linkedin-staging.csv</code> from your
+        <strong>#ieeedataport</strong> review — the pipeline below shows when content
+        was last merged and deployed.
       </p>
     )}
   </section>
+
+  <PipelineStatus />
 
   <section class="stats-row">
     <div class="stat-card">

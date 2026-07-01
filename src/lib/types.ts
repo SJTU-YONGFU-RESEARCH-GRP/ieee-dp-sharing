@@ -62,6 +62,18 @@ export interface EntriesFile {
   entries: Entry[];
 }
 
+export interface PipelineStatus {
+  last_pipeline_run: string;
+  data_updated_at: string;
+  auto_publish: boolean;
+  content_filter_enabled: boolean;
+  published_count: number;
+  pending_count: number;
+  total_entries: number;
+  blocklist_count: number;
+  staging_queue_rows: number;
+}
+
 export interface FilterState {
   query: string;
   event: string;

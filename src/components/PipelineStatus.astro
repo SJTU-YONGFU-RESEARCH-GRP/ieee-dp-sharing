@@ -1,0 +1,138 @@
+---
+import { formatPipelineTime, getPipelineStatus } from '../lib/pipeline';
+
+const status = getPipelineStatus();
+const base = import.meta.env.BASE_URL;
+---
+
+<section class="panel pipeline-status">
+  <div class="pipeline-header">
+    <h2>Pipeline status</h2>
+    <span class="live-badge">Live data</span>
+  </div>
+  <p class="muted pipeline-intro">
+    Automated flow: CSV merge → content filter → enrich → GitHub Pages deploy.
+    Updates when <code>data/linkedin-staging.csv</code> changes and the daily Action runs.
+  </p>
+  <dl class="pipeline-grid">
+    <div>
+      <dt>Last pipeline run</dt>
+      <dd>{formatPipelineTime(status.last_pipeline_run)}</dd>
+    </div>
+    <div>
+      <dt>Dataset updated</dt>
+      <dd>{status.data_updated_at ?? '—'}</dd>
+    </div>
+    <div>
+      <dt>Published on site</dt>
+      <dd><strong>{status.published_count}</strong></dd>
+    </div>
+    <div>
+      <dt>Pending queue</dt>
+      <dd>{status.pending_count}</dd>
+    </div>
+    <div>
+      <dt>Blocklisted (removed)</dt>
+      <dd>{status.blocklist_count}</dd>
+    </div>
+    <div>
+      <dt>CSV rows awaiting merge</dt>
+      <dd>{status.staging_queue_rows}</dd>
+    </div>
+    <div class="full flags">
+      <dt>Automation</dt>
+      <dd>
+        {status.auto_publish && <span class="flag">auto-publish</span>}
+        {status.content_filter_enabled && <span class="flag">content filter</span>}
+      </dd>
+    </div>
+  </dl>
+  <p class="pipeline-links">
+    <a href={`${base}moderation/`}>Moderation queue</a>
+    ·
+    <a href={`${base}insights/`}>Insights</a>
+    ·
+    <a href="https://github.com/SJTU-YONGFU-RESEARCH-GRP/ieee-dp-sharing/actions">GitHub Actions</a>
+  </p>
+</section>
+
+<style>
+  .pipeline-status {
+    margin-bottom: 1.5rem;
+    border-left: 4px solid var(--accent);
+  }
+
+  .pipeline-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.35rem;
+  }
+
+  .pipeline-header h2 {
+    margin: 0;
+    font-size: 1.15rem;
+  }
+
+  .live-badge {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    background: #e8f6ee;
+    color: var(--positive);
+    padding: 0.2rem 0.5rem;
+    border-radius: 999px;
+  }
+
+  .pipeline-intro {
+    margin: 0 0 1rem;
+    font-size: 0.92rem;
+  }
+
+  .pipeline-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 0.75rem 1rem;
+    margin: 0;
+  }
+
+  .pipeline-grid .full {
+    grid-column: 1 / -1;
+  }
+
+  .pipeline-grid dt {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    font-weight: 700;
+  }
+
+  .pipeline-grid dd {
+    margin: 0.2rem 0 0;
+    font-size: 0.95rem;
+  }
+
+  .flags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .flag {
+    display: inline-block;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+  }
+
+  .pipeline-links {
+    margin: 1rem 0 0;
+    font-size: 0.9rem;
+  }
+</style>
