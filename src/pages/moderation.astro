@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { getPendingEntries } from '../lib/entries';
+import { IEEE_DATAPORT_HASHTAG_SEARCH } from '../lib/linkedin';
 
 const pending = getPendingEntries();
 ---
@@ -26,6 +27,10 @@ const pending = getPendingEntries();
         (<code>AUTO_PUBLISH=true</code>).
       </p>
       <p>
+        <a href={IEEE_DATAPORT_HASHTAG_SEARCH} target="_blank" rel="noopener noreferrer">
+          Search #ieeedataport on LinkedIn
+        </a>
+        {' · '}
         <a href={`${import.meta.env.BASE_URL}submit/`}>Submit page</a> ·
         See <code>docs/EDITORIAL_WORKFLOW.md</code> in the repository.
       </p>

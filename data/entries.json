@@ -1,42 +1,5 @@
 {
   "version": "1.0.0",
   "updated_at": "2026-07-01",
-  "entries": [
-    {
-      "id": "li-jordan-lee-7d2b21aef5",
-      "text": "Publishing our benchmark dataset on IEEE DataPort with #ieeedataport gave us a citable DOI within days — reproducibility for our IEEE study is much easier now.",
-      "display_name": "Jordan Lee",
-      "affiliation": "Georgia Institute of Technology",
-      "profile_url": null,
-      "source_type": "linkedin_post",
-      "source_url": "https://www.linkedin.com/posts/ieee-dataport-seed-sample-2026",
-      "event": "IEEE DataPort Community Session",
-      "society": "IEEE Signal Processing Society",
-      "region": "North America",
-      "dataset_topic": "Radar Signal Processing",
-      "post_type": "testimonial",
-      "consent_status": "granted",
-      "consent_note": "Discovered via public #ieeedataport post. Editor: Seed sample for pipeline demo — replace URL with real LinkedIn post when curated Auto-published from public #ieeedataport staging.",
-      "moderation_status": "approved",
-      "approved_by": "auto-pipeline",
-      "approved_at": "2026-07-02",
-      "submitted_at": "2026-07-02",
-      "published_at": "2026-07-02",
-      "featured": false,
-      "tags": [
-        "ieeedataport",
-        "ieeedataport;citation;reproducibility"
-      ],
-      "enrichment": {
-        "sentiment": "positive",
-        "sentiment_score": 0.6,
-        "topics": [
-          "citation",
-          "reproducibility"
-        ],
-        "quote": "Publishing our benchmark dataset on IEEE DataPort with #ieeedataport gave us a citable DOI within days — reproducibility for our IEEE study is much easier now.",
-        "enriched_at": "2026-07-01T18:11:48Z"
-      }
-    }
-  ]
+  "entries": []
 }

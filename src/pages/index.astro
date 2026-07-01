@@ -8,6 +8,7 @@ import {
   getPendingCount,
   getDataMeta,
 } from '../lib/entries';
+import { IEEE_DATAPORT_HASHTAG_SEARCH } from '../lib/linkedin';
 
 const published = getPublishedEntries().sort((a, b) => {
   if (a.featured !== b.featured) return a.featured ? -1 : 1;
@@ -26,11 +27,17 @@ const featuredCount = published.filter((e) => e.featured).length;
       sourced from editorial review of <strong>#ieeedataport</strong> LinkedIn posts
       and member submissions—with consent-based attribution.
     </p>
+    <p class="hashtag-note">
+      Discover posts on{' '}
+      <a href={IEEE_DATAPORT_HASHTAG_SEARCH} target="_blank" rel="noopener noreferrer">
+        LinkedIn #ieeedataport search
+      </a>
+      , then add rows to <code>data/linkedin-staging.csv</code> with the real post URL.
+      The pipeline merges, filters, and deploys automatically.
+    </p>
     {published.length === 0 && (
-      <p class="hashtag-note">
-        Add rows to <code>data/linkedin-staging.csv</code> from your
-        <strong>#ieeedataport</strong> review — the pipeline below shows when content
-        was last merged and deployed.
+      <p class="hashtag-note muted">
+        No published reflections yet — start from the LinkedIn search above.
       </p>
     )}
   </section>

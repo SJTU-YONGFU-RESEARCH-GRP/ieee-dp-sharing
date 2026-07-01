@@ -30,6 +30,7 @@ JSON_STAGING_PATH = ROOT / "data" / "linkedin-staging.json"
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from blocklist import blocklist_reason, is_blocklisted  # noqa: E402
+from source_urls import is_placeholder_source_url  # noqa: E402
 
 CSV_FIELDNAMES = [
     "status",
@@ -152,7 +153,10 @@ def nullable(value: str | None) -> str | None:
 def parse_tags(raw: str | None, hashtag: str | None) -> list[str]:
     tags: list[str] = []
     if raw:
-        tags.extend(t.strip() for t in raw.split(",") if t.strip())
+        for part in raw.replace(";", ",").split(","):
+            t = part.strip()
+            if t:
+                tags.append(t)
     if hashtag:
         tag = hashtag.strip().lstrip("#").lower()
         if tag and tag not in tags:
@@ -198,13 +202,19 @@ def row_to_entry(row: dict, *, auto_publish: bool) -> dict:
     entry_id = entry_id_for_url(post_url, display_name)
     hashtag = nullable(row.get("hashtag"))
 
+    if is_placeholder_source_url(post_url) or "seed sample" in (editor_notes or "").lower():
+        post_url = None
+        source_type = "manual_submission"
+    else:
+        source_type = "linkedin_post"
+
     entry = {
         "id": entry_id,
         "text": text,
         "display_name": display_name,
         "affiliation": nullable(row.get("affiliation")),
         "profile_url": normalize_url(row.get("profile_url")),
-        "source_type": "linkedin_post",
+        "source_type": source_type,
         "source_url": post_url,
         "event": nullable(row.get("event")),
         "society": nullable(row.get("society")),

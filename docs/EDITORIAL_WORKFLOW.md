@@ -22,7 +22,7 @@ Moderation queue: `/moderation/`
 ## Step 1 — Discover posts on LinkedIn
 
 1. Log in to LinkedIn (normal browser).
-2. Search: `#ieeedataport` or `ieeedataport`.
+2. Open [#ieeedataport search on LinkedIn](https://www.linkedin.com/search/results/all/?keywords=%23ieeedataport%20&origin=GLOBAL_SEARCH_HEADER).
 3. For each relevant **public** post:
    - Copy post URL
    - Copy author name, affiliation, post text

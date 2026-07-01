@@ -1,6 +1,7 @@
 ---
 import type { Entry } from '../lib/types';
 import { TOPIC_LABELS } from '../lib/types';
+import { isPublicSourceUrl, sourceLinkLabel } from '../lib/source';
 
 interface Props {
   entry: Entry;
@@ -11,6 +12,7 @@ const quote = entry.enrichment?.quote ?? entry.text;
 const sentiment = entry.enrichment?.sentiment;
 const topics = entry.enrichment?.topics ?? entry.tags ?? [];
 const dateLabel = entry.published_at ?? entry.submitted_at;
+const publicSource = isPublicSourceUrl(entry.source_url);
 ---
 
 <article class="card" data-entry-id={entry.id}>
@@ -30,10 +32,10 @@ const dateLabel = entry.published_at ?? entry.submitted_at;
   </div>
   <footer class="card-footer">
     <time datetime={dateLabel}>{dateLabel}</time>
-    {entry.source_url ? (
-      <a href={entry.source_url} target="_blank" rel="noopener noreferrer">View source</a>
+    {publicSource ? (
+      <a href={entry.source_url!} target="_blank" rel="noopener noreferrer">{sourceLinkLabel(entry.source_url)}</a>
     ) : (
-      <span class="muted">Curated submission</span>
+      <span class="muted">{sourceLinkLabel(entry.source_url)}</span>
     )}
   </footer>
 </article>

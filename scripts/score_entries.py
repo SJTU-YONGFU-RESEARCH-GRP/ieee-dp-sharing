@@ -19,6 +19,7 @@ RULES_PATH = ROOT / "data" / "filter-rules.json"
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from blocklist import add_to_blocklist, is_blocklisted  # noqa: E402
+from source_urls import sanitize_entry_source  # noqa: E402
 from text_analysis import detect_sentiment, relevance_hits  # noqa: E402
 
 
@@ -115,7 +116,11 @@ def main() -> int:
     kept = removed = 0
     surviving: list[dict] = []
 
+    sanitized = 0
     for entry in entries:
+        if sanitize_entry_source(entry):
+            sanitized += 1
+
         entry_id = entry.get("id")
         url = entry.get("source_url")
         blocked, _ = is_blocklisted(url, entry_id)
@@ -144,7 +149,8 @@ def main() -> int:
         save_entries(data)
 
     mode = "dry-run" if args.dry_run else ("apply" if args.apply else "report")
-    print(f"Filter complete ({mode}): kept {kept}, removed {removed}")
+    extra = f", sanitized {sanitized} placeholder source(s)" if sanitized else ""
+    print(f"Filter complete ({mode}): kept {kept}, removed {removed}{extra}")
     return 0
 
 
