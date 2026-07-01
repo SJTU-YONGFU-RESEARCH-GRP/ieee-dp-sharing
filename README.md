@@ -6,16 +6,22 @@ A static showcase website for curated IEEE DataPort member reflections, testimon
 
 ## Live workflow
 
-### A — JSON in repo (active)
+### LinkedIn `#ieeedataport` intake (active)
 
-1. Add or edit entries in [`data/entries.json`](data/entries.json)
-2. Or use the [**Submit**](src/pages/submit.astro) page to generate JSON and open a PR
-3. Editor sets `moderation_status: "approved"`, `approved_by`, `approved_at`, `published_at`
-4. Push to `main` → GitHub Actions builds and publishes to the `gh-pages` branch
+1. Editors search LinkedIn for **`#ieeedataport`** and add rows to [`data/linkedin-staging.csv`](data/linkedin-staging.csv)
+2. `python3 scripts/merge_staging.py` auto-publishes new rows (`AUTO_PUBLISH=true` by default)
+3. Daily pipeline: merge → enrich → push → site deploy
 
-### D — LinkedIn API (future, stub ready)
+To require manual approval: `AUTO_PUBLISH=false python3 scripts/merge_staging.py --require-approval`
 
-When IEEE obtains approved LinkedIn API access for organization pages:
+Full guide: [`docs/EDITORIAL_WORKFLOW.md`](docs/EDITORIAL_WORKFLOW.md)
+
+### Member submit + manual JSON
+
+1. [**Submit**](src/pages/submit.astro) page → JSON for a PR, or edit [`data/entries.json`](data/entries.json) directly
+2. Approve with `approve_entry.py` or set moderation fields manually
+
+### LinkedIn API (future, IEEE org pages only)
 
 1. Add repository secrets:
    - `LINKEDIN_ACCESS_TOKEN`
@@ -32,6 +38,7 @@ When IEEE obtains approved LinkedIn API access for organization pages:
 |------|------|-------------|
 | Showcase | `/` | Filterable testimonial cards |
 | Insights | `/insights/` | Topic and sentiment summaries |
+| Moderation | `/moderation/` | Pending queue for editors |
 | Submit | `/submit/` | Client-side JSON generator + PR instructions |
 
 ## Data schema
@@ -50,10 +57,10 @@ Only entries with `moderation_status: "approved"`, `consent_status: "granted"`, 
 
 ```bash
 npm install
-npm run dev        # http://localhost:4321
-npm run validate   # check data/entries.json
-npm run enrich     # update sentiment/topics for approved entries
-npm run build      # output to dist/
+npm run dev
+npm run merge      # import linkedin-staging.csv → entries.json
+npm run validate
+npm run enrich
 ```
 
 For local preview matching GitHub Pages subpath:

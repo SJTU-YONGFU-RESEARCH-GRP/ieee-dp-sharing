@@ -1,0 +1,141 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getPendingEntries } from '../lib/entries';
+
+const pending = getPendingEntries();
+---
+
+<Layout
+  title="Moderation queue · IEEE DataPort Member Voices"
+  description="Editorial queue for pending LinkedIn #ieeedataport discoveries awaiting approval."
+>
+  <section class="hero">
+    <h1>Moderation queue</h1>
+    <p>
+      Pending entries (only when <code>AUTO_PUBLISH=false</code>). With the default
+      auto-publish pipeline, new CSV rows go live without appearing here.
+    </p>
+  </section>
+
+  {pending.length === 0 ? (
+    <section class="panel empty-queue">
+      <h2>Queue is empty</h2>
+      <p class="muted">
+        No pending entries. New rows in <code>data/linkedin-staging.csv</code> are
+        merged and <strong>auto-published</strong> by the daily pipeline
+        (<code>AUTO_PUBLISH=true</code>).
+      </p>
+      <p>
+        <a href={`${import.meta.env.BASE_URL}submit/`}>Submit page</a> ·
+        See <code>docs/EDITORIAL_WORKFLOW.md</code> in the repository.
+      </p>
+    </section>
+  ) : (
+    <section class="queue-list">
+      {pending.map((entry) => (
+        <article class="panel queue-card">
+          <header class="queue-header">
+            <div>
+              <strong>{entry.display_name}</strong>
+              {entry.affiliation && <span class="muted"> · {entry.affiliation}</span>}
+            </div>
+            <code class="entry-id">{entry.id}</code>
+          </header>
+          <blockquote>{entry.text}</blockquote>
+          <dl class="meta-grid">
+            <div><dt>Submitted</dt><dd>{entry.submitted_at}</dd></div>
+            <div><dt>Consent</dt><dd>{entry.consent_status}</dd></div>
+            <div><dt>Source</dt><dd>{entry.source_type}</dd></div>
+            {entry.source_url && (
+              <div class="full">
+                <dt>Post URL</dt>
+                <dd><a href={entry.source_url} target="_blank" rel="noopener noreferrer">{entry.source_url}</a></dd>
+              </div>
+            )}
+            {entry.tags.length > 0 && (
+              <div class="full">
+                <dt>Tags</dt>
+                <dd>{entry.tags.join(', ')}</dd>
+              </div>
+            )}
+            {entry.consent_note && (
+              <div class="full">
+                <dt>Consent note</dt>
+                <dd>{entry.consent_note}</dd>
+              </div>
+            )}
+          </dl>
+          <pre class="approve-cmd">python3 scripts/approve_entry.py {entry.id} --by YOUR_HANDLE</pre>
+        </article>
+      ))}
+    </section>
+  )}
+</Layout>
+
+<style>
+  .empty-queue h2 {
+    margin: 0 0 0.5rem;
+    font-size: 1.15rem;
+  }
+
+  .queue-list {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .queue-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .entry-id {
+    font-size: 0.78rem;
+    background: #eef3f8;
+    padding: 0.2rem 0.45rem;
+    border-radius: 6px;
+    white-space: nowrap;
+  }
+
+  blockquote {
+    margin: 0 0 1rem;
+    font-size: 1.02rem;
+    line-height: 1.55;
+  }
+
+  .meta-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 0.65rem 1rem;
+    margin: 0 0 1rem;
+  }
+
+  .meta-grid .full {
+    grid-column: 1 / -1;
+  }
+
+  dt {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    font-weight: 700;
+  }
+
+  dd {
+    margin: 0.15rem 0 0;
+    font-size: 0.92rem;
+  }
+
+  .approve-cmd {
+    margin: 0;
+    background: #0f1722;
+    color: #e8eef7;
+    padding: 0.65rem 0.75rem;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    overflow-x: auto;
+  }
+</style>

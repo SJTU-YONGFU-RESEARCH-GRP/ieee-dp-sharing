@@ -1,7 +1,7 @@
 # Daily data refresh pipeline.
 #
 # Runs scripts/daily-pipeline.sh on a schedule:
-#   enrich → validate → build → commit data/ → push
+#   merge → enrich → validate → build → commit data/ → push
 #
 # Push to main triggers deploy-pages.yml automatically.
 
@@ -38,6 +38,7 @@ jobs:
           LINKEDIN_ORG_URN: ${{ secrets.LINKEDIN_ORG_URN }}
           GIT_USER_NAME: github-actions[bot]
           GIT_USER_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
+          AUTO_PUBLISH: "true"
         run: |
           chmod +x scripts/daily-pipeline.sh
           ./scripts/daily-pipeline.sh "chore: daily enrichment refresh"

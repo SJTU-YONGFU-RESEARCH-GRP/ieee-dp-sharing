@@ -21,10 +21,17 @@ const featuredCount = published.filter((e) => e.featured).length;
   <section class="hero">
     <h1>IEEE DataPort Member Voices</h1>
     <p>
-      A curated showcase of public reflections, testimonials, and discussion
-      comments from IEEE members—with consent-based attribution and semantic
-      insights about how researchers use DataPort.
+      A curated showcase of public reflections and testimonials about IEEE DataPort,
+      sourced from editorial review of <strong>#ieeedataport</strong> LinkedIn posts
+      and member submissions—with consent-based attribution.
     </p>
+    {published.length === 0 && (
+      <p class="hashtag-note">
+        No published reflections yet. Add rows to
+        <code>data/linkedin-staging.csv</code> from your <strong>#ieeedataport</strong>
+        review — the daily pipeline merges, auto-publishes, and deploys.
+      </p>
+    )}
   </section>
 
   <section class="stats-row">
@@ -102,5 +109,14 @@ const featuredCount = published.filter((e) => e.featured).length;
 
   .all-entries {
     margin-top: 0.5rem;
+  }
+
+  .hashtag-note {
+    margin-top: 0.75rem;
+    padding: 0.75rem 1rem;
+    background: var(--accent-soft);
+    border-radius: 8px;
+    color: var(--accent);
+    font-size: 0.95rem;
   }
 </style>

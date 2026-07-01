@@ -6,6 +6,7 @@
 #
 # Steps:
 #   [import]  optional LinkedIn API staging (no-op until secrets configured)
+#   [merge]   scripts/merge_staging.py — CSV #ieeedataport → entries.json (auto-publish)
 #   [enrich]  scripts/enrich.py — sentiment/topics for approved entries
 #   [validate] scripts/validate.py
 #   [build]   NODE_ENV=production npm run build (GitHub Pages base path)
@@ -38,7 +39,7 @@ Options:
 Environment:
   GH_PAGES_BASE      Repo subpath for Pages (default: ieee-dp-sharing).
   BASE_PATH          Astro base override (default: /${GH_PAGES_BASE}/).
-  LINKEDIN_ACCESS_TOKEN, LINKEDIN_ORG_URN  Optional API secrets.
+  AUTO_PUBLISH       Auto-approve new CSV rows (default: true). Set false for manual queue.
 
 EOF
 }
@@ -103,6 +104,7 @@ fi
 
 GH_PAGES_BASE="${GH_PAGES_BASE:-ieee-dp-sharing}"
 export BASE_PATH="${BASE_PATH:-/${GH_PAGES_BASE}/}"
+export AUTO_PUBLISH="${AUTO_PUBLISH:-true}"
 
 run() {
   if [[ "$DRY_RUN" -eq 1 ]]; then
@@ -138,9 +140,12 @@ echo "==> Pages base: ${BASE_PATH}"
 echo "==> repo root: $REPO_ROOT"
 
 if [[ "$NO_IMPORT" -eq 0 ]]; then
-  echo "==> [import] LinkedIn staging (optional)"
+  echo "==> [import] LinkedIn API staging (optional)"
   run python3 scripts/linkedin_import.py || true
 fi
+
+echo "==> [merge] scripts/merge_staging.py"
+run python3 scripts/merge_staging.py
 
 echo "==> [enrich] scripts/enrich.py"
 run python3 scripts/enrich.py
@@ -186,7 +191,7 @@ GIT_TOPLEVEL="$(git rev-parse --show-toplevel)"
 cd "$GIT_TOPLEVEL"
 
 echo "==> [git] stage data changes"
-run git add data/entries.json data/.deploy-stamp data/linkedin-staging.json 2>/dev/null || run git add data/entries.json data/.deploy-stamp
+run git add data/entries.json data/linkedin-staging.csv data/.deploy-stamp data/linkedin-staging.json 2>/dev/null || run git add data/entries.json data/linkedin-staging.csv data/.deploy-stamp
 
 if [[ "$DRY_RUN" -eq 1 ]]; then
   run git status --short

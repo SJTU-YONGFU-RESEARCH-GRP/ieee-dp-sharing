@@ -9,6 +9,8 @@
     "preview": "astro preview",
     "validate": "python3 scripts/validate.py",
     "enrich": "python3 scripts/enrich.py",
+    "merge": "python3 scripts/merge_staging.py",
+    "approve": "python3 scripts/approve_entry.py",
     "check": "npm run validate && npm run build",
     "pipeline": "bash scripts/daily-pipeline.sh",
     "pipeline:dry": "bash scripts/daily-pipeline.sh --dry-run"

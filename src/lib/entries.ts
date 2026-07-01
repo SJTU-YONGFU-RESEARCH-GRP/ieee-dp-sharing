@@ -21,6 +21,12 @@ export function getFeaturedEntries(): Entry[] {
   return getPublishedEntries().filter((e) => e.featured);
 }
 
+export function getPendingEntries(): Entry[] {
+  return data.entries
+    .filter((e) => e.moderation_status === 'pending')
+    .sort((a, b) => (b.submitted_at ?? '').localeCompare(a.submitted_at ?? ''));
+}
+
 export function getPendingCount(): number {
   return data.entries.filter((e) => e.moderation_status === 'pending').length;
 }
