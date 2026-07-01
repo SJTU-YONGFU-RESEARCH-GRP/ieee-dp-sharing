@@ -1,4 +1,4 @@
-# Daily data refresh pipeline (website-trial-v1 style).
+# Daily data refresh pipeline.
 #
 # Runs scripts/daily-pipeline.sh on a schedule:
 #   enrich → validate → build → commit data/ → push

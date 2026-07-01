@@ -1,14 +1,12 @@
 # Host IEEE DataPort Voices on GitHub Pages
 
-Same deployment model as [website-trial-v1](https://github.com/SJTU-YONGFU-RESEARCH-GRP/website-trial-v1).
-
 ## Live URL (after deploy)
 
 **`https://<org>.github.io/<repo>/`**
 
-Example if repo is `ieee-dp-sharing` under `SJTU-YONGFU-RESEARCH-GRP`:
+Example if the repository is named `ieee-dp-sharing`:
 
-**`https://sjtu-yongfu-research-grp.github.io/ieee-dp-sharing/`**
+**`https://<your-org>.github.io/ieee-dp-sharing/`**
 
 ## One-time GitHub configuration
 
@@ -20,7 +18,7 @@ Example if repo is `ieee-dp-sharing` under `SJTU-YONGFU-RESEARCH-GRP`:
 
 4. Push to **`main`**. Workflow **Deploy to GitHub Pages** (`.github/workflows/deploy-pages.yml`) builds and deploys **`dist/`**.
 
-## Daily automation (website-trial-v1 style)
+## Daily automation
 
 Workflow **Daily pipeline** (`.github/workflows/daily-pipeline.yml`):
 
@@ -101,6 +99,32 @@ Add repository secrets:
 Implement `fetch_organization_posts()` in `scripts/linkedin_import.py`. Staged rows land in `data/linkedin-staging.json` for editorial review before merge into `data/entries.json`.
 
 ## Troubleshooting
+
+### Site returns 404
+
+A GitHub 404 at `https://<org>.github.io/<repo>/` almost always means **Pages is not published yet**, not a bad local build.
+
+**Checklist (do all three):**
+
+1. **Enable Pages** — repo **Settings → Pages → Build and deployment → Source: `GitHub Actions`** (not “Deploy from a branch”). Save.
+
+2. **Repository visibility** — the repo is currently **private**. On GitHub Free, **public** project Pages URLs only work for **public** repositories. Either:
+   - make the repo **public**, or
+   - use a GitHub Team/Enterprise plan that allows Pages from private repos.
+
+3. **Run the deploy workflow** — **Actions → Deploy to GitHub Pages → Run workflow** (or push any commit to `main`).
+
+Local `./scripts/build-and-push.sh` **does not upload `dist/` directly**. It only pushes `data/` changes; GitHub Actions builds and deploys `dist/` on push.
+
+To force a deploy when entries are unchanged:
+
+```bash
+./scripts/build-and-push.sh --force-deploy
+```
+
+Wait 1–3 minutes after a successful Actions run, then open:
+
+`https://<your-org>.github.io/ieee-dp-sharing/`
 
 ### Blank page / 404 assets
 

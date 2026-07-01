@@ -32,6 +32,7 @@ Options:
   --use-install      Run npm install instead of npm ci.
   --no-push          Commit locally but do not push.
   --no-import        Skip LinkedIn staging import step.
+  --force-deploy     Update deploy stamp and push even if entries unchanged.
   -v, --verbose      Shell trace (set -x).
 
 Environment:
@@ -47,6 +48,7 @@ SKIP_INSTALL=0
 USE_INSTALL=0
 NO_PUSH=0
 NO_IMPORT=0
+FORCE_DEPLOY=0
 COMMIT_MSG=""
 
 while [[ $# -gt 0 ]]; do
@@ -73,6 +75,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --no-import)
       NO_IMPORT=1
+      shift
+      ;;
+    --force-deploy)
+      FORCE_DEPLOY=1
       shift
       ;;
     -v | --verbose)
@@ -165,6 +171,12 @@ else
   verify_dist
 fi
 
+if [[ "$FORCE_DEPLOY" -eq 1 ]]; then
+  echo "==> [stamp] force deploy trigger"
+  mkdir -p data
+  run bash -c "date -u +%Y-%m-%dT%H:%M:%SZ > data/.deploy-stamp"
+fi
+
 if ! git rev-parse --is-inside-work-tree &>/dev/null; then
   echo "Not a git repo — skipping commit/push."
   exit 0
@@ -174,7 +186,7 @@ GIT_TOPLEVEL="$(git rev-parse --show-toplevel)"
 cd "$GIT_TOPLEVEL"
 
 echo "==> [git] stage data changes"
-run git add data/entries.json data/linkedin-staging.json 2>/dev/null || run git add data/entries.json
+run git add data/entries.json data/.deploy-stamp data/linkedin-staging.json 2>/dev/null || run git add data/entries.json data/.deploy-stamp
 
 if [[ "$DRY_RUN" -eq 1 ]]; then
   run git status --short
@@ -183,8 +195,12 @@ if [[ "$DRY_RUN" -eq 1 ]]; then
 fi
 
 if git diff --cached --quiet && git diff --quiet data/; then
-  echo "No data changes to commit. Pipeline OK."
-  exit 0
+  echo "No data changes to commit."
+  if [[ "$FORCE_DEPLOY" -eq 0 ]]; then
+    echo "Pipeline OK (site deploys only after a push triggers deploy-pages.yml)."
+    echo "Tip: re-run with --force-deploy to push a deploy stamp and trigger CI."
+    exit 0
+  fi
 fi
 
 git config user.name "${GIT_USER_NAME:-github-actions[bot]}"

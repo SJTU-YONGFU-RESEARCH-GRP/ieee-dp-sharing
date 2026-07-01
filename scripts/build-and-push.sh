@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Local helper: full site build + optional git push (website-trial-v1 style).
+# Local helper: full site build + optional git push.
 #
 # Usage:
 #   ./scripts/build-and-push.sh

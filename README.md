@@ -65,7 +65,7 @@ npm run preview
 
 ## GitHub Pages setup
 
-Same pattern as [website-trial-v1](https://github.com/SJTU-YONGFU-RESEARCH-GRP/website-trial-v1). Full checklist: [`docs/GITHUB_PAGES_SETUP.md`](docs/GITHUB_PAGES_SETUP.md).
+Full checklist: [`docs/GITHUB_PAGES_SETUP.md`](docs/GITHUB_PAGES_SETUP.md).
 
 1. Push this repo to GitHub
 2. **Settings → Pages → Build and deployment → GitHub Actions**
@@ -76,7 +76,7 @@ Same pattern as [website-trial-v1](https://github.com/SJTU-YONGFU-RESEARCH-GRP/w
 
 [`.github/workflows/daily-pipeline.yml`](.github/workflows/daily-pipeline.yml) runs at **06:00 UTC** (and on manual **Run workflow**):
 
-1. [`scripts/daily-pipeline.sh`](scripts/daily-pipeline.sh) — same flow as [website-trial-v1 `build-and-push.sh`](https://github.com/SJTU-YONGFU-RESEARCH-GRP/website-trial-v1/blob/main/scripts/build-and-push.sh)
+1. [`scripts/daily-pipeline.sh`](scripts/daily-pipeline.sh) — enrich, validate, build, commit, push
 2. Optional LinkedIn staging import (no-op until API secrets set)
 3. `scripts/enrich.py` → `scripts/validate.py` → `npm run build`
 4. Commit `data/entries.json` and **push**
@@ -86,8 +86,11 @@ Same pattern as [website-trial-v1](https://github.com/SJTU-YONGFU-RESEARCH-GRP/w
 # Local dry-run
 npm run pipeline:dry
 
-# Local build + push
+# Local build + push (triggers GitHub Actions deploy on push)
 ./scripts/build-and-push.sh "chore: update showcase"
+
+# Force deploy when data/entries.json did not change
+./scripts/build-and-push.sh --force-deploy
 ```
 
 ## Adding an entry manually
