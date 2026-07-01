@@ -11,7 +11,7 @@ A static showcase website for curated IEEE DataPort member reflections, testimon
 1. Add or edit entries in [`data/entries.json`](data/entries.json)
 2. Or use the [**Submit**](src/pages/submit.astro) page to generate JSON and open a PR
 3. Editor sets `moderation_status: "approved"`, `approved_by`, `approved_at`, `published_at`
-4. Push to `main` → GitHub Actions builds and deploys the site
+4. Push to `main` → GitHub Actions builds and publishes to the `gh-pages` branch
 
 ### D — LinkedIn API (future, stub ready)
 
@@ -68,8 +68,8 @@ npm run preview
 Full checklist: [`docs/GITHUB_PAGES_SETUP.md`](docs/GITHUB_PAGES_SETUP.md).
 
 1. Push this repo to GitHub
-2. **Settings → Pages → Build and deployment → GitHub Actions**
-3. On push to `main`, [`.github/workflows/deploy-pages.yml`](.github/workflows/deploy-pages.yml) builds and deploys
+2. Run **Actions → Deploy to GitHub Pages** once (creates `gh-pages` branch)
+3. **Settings → Pages → Deploy from a branch → `gh-pages` / (root)**
 4. Site URL: `https://<org>.github.io/<repo>/`
 
 ## Daily automation (Actions cron)
@@ -80,7 +80,7 @@ Full checklist: [`docs/GITHUB_PAGES_SETUP.md`](docs/GITHUB_PAGES_SETUP.md).
 2. Optional LinkedIn staging import (no-op until API secrets set)
 3. `scripts/enrich.py` → `scripts/validate.py` → `npm run build`
 4. Commit `data/entries.json` and **push**
-5. Push triggers **deploy-pages.yml** → live site
+5. Push triggers **deploy-pages.yml** → updates `gh-pages` → live site
 
 ```bash
 # Local dry-run

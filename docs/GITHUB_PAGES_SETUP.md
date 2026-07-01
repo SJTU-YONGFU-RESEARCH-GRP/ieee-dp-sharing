@@ -14,9 +14,18 @@ Example if the repository is named `ieee-dp-sharing`:
 
 2. Commit **`package-lock.json`** (CI uses **`npm ci`**).
 
-3. **Settings → Pages → Build and deployment → Source: GitHub Actions**
+3. Run **Actions → Deploy to GitHub Pages → Run workflow** once (or push to `main`).  
+   This creates/updates the **`gh-pages`** branch with the built site.
 
-4. Push to **`main`**. Workflow **Deploy to GitHub Pages** (`.github/workflows/deploy-pages.yml`) builds and deploys **`dist/`**.
+4. **Settings → Pages → Build and deployment**
+   - **Source:** `Deploy from a branch`
+   - **Branch:** `gh-pages`
+   - **Folder:** `/ (root)`
+   - Save
+
+5. Wait 1–3 minutes, then open your site URL.
+
+> **Note:** This repo uses **branch deploy** (`peaceiris/actions-gh-pages`), not the GitHub Actions Pages API. You do **not** need Source = “GitHub Actions”.
 
 ## Daily automation
 
@@ -40,7 +49,7 @@ npm ci + npm run build
         ↓
 git commit data/entries.json + push
         ↓
-push triggers deploy-pages.yml → live site
+push triggers deploy-pages.yml → gh-pages branch → live site
 ```
 
 ### Manual trigger
@@ -100,40 +109,20 @@ Implement `fetch_organization_posts()` in `scripts/linkedin_import.py`. Staged r
 
 ## Troubleshooting
 
-### Deploy job: `Failed to create deployment (status: 404)`
+### `configure-pages` / `deploy-pages` / `Get Pages site failed`
 
-This exact error means **GitHub Pages is not enabled** for the repository (or not set to **GitHub Actions**).
+Older workflow versions used the **GitHub Actions Pages API**, which fails with 404 until Pages is enabled for Actions. The current workflow **publishes to the `gh-pages` branch** instead and does not call that API.
 
-**Fix (one time, in the browser):**
-
-1. Open **[ieee-dp-sharing → Settings → Pages](https://github.com/SJTU-YONGFU-RESEARCH-GRP/ieee-dp-sharing/settings/pages)**
-2. Under **Build and deployment**, open **Source**
-3. Choose **`GitHub Actions`** (not “Deploy from a branch”)
-4. Click **Save** if shown
-5. Go to **Actions → Deploy to GitHub Pages → Re-run all jobs**
-
-**If the Source dropdown is missing or disabled:**
-
-- Your org may block Pages — an org owner must allow Pages under **Organization → Settings → Member privileges** (or **Pages** policy).
-- On **GitHub Free**, the site URL is only **public** if the repository is **public** (**Settings → General → Change repository visibility**).
-
-The workflow cannot enable Pages by itself; `actions/deploy-pages` needs Pages turned on in Settings first.
+If you still see this error, re-run after the latest `deploy-pages.yml` is on `main`.
 
 ### Site returns 404 in the browser
 
-A GitHub 404 at `https://<org>.github.io/<repo>/` almost always means **Pages is not published yet**, not a bad local build.
+1. **Workflow succeeded** — check **Actions → Deploy to GitHub Pages** is green.
+2. **`gh-pages` branch exists** — it is created by the deploy workflow.
+3. **Pages source** — **Settings → Pages → Deploy from a branch → `gh-pages` → `/ (root)`**.
+4. **Repository visibility** — on GitHub Free, public `*.github.io` URLs require a **public** repository.
 
-**Checklist (do all three):**
-
-1. **Enable Pages** — repo **Settings → Pages → Build and deployment → Source: `GitHub Actions`** (not “Deploy from a branch”). Save.
-
-2. **Repository visibility** — the repo is currently **private**. On GitHub Free, **public** project Pages URLs only work for **public** repositories. Either:
-   - make the repo **public**, or
-   - use a GitHub Team/Enterprise plan that allows Pages from private repos.
-
-3. **Run the deploy workflow** — **Actions → Deploy to GitHub Pages → Run workflow** (or push any commit to `main`).
-
-Local `./scripts/build-and-push.sh` **does not upload `dist/` directly**. It only pushes `data/` changes; GitHub Actions builds and deploys `dist/` on push.
+Local `./scripts/build-and-push.sh` **does not upload `dist/` directly**. It only pushes `data/` changes; GitHub Actions builds and publishes `dist/` to `gh-pages`.
 
 To force a deploy when entries are unchanged:
 
@@ -141,19 +130,11 @@ To force a deploy when entries are unchanged:
 ./scripts/build-and-push.sh --force-deploy
 ```
 
-Wait 1–3 minutes after a successful Actions run, then open:
-
-`https://<your-org>.github.io/ieee-dp-sharing/`
-
 ### Blank page / 404 assets
 
 DevTools → Network: if `.js` files 404, `GH_PAGES_BASE` / `BASE_PATH` must match the repo name in the URL. Rebuild and redeploy.
 
-### Deploy job 404
-
-**Settings → Pages → Source** must be **GitHub Actions**, not “Deploy from a branch”.
-
 ### Daily pipeline does not push
 
 - Workflow needs **contents: write** (configured in `daily-pipeline.yml`).
-- If `data/entries.json` unchanged after enrich, no commit is created (expected).
+- If `data/entries.json` unchanged after enrich, use `--force-deploy`.
