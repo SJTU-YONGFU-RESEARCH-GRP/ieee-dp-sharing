@@ -28,6 +28,9 @@ ENTRIES_PATH = ROOT / "data" / "entries.json"
 CSV_PATH = ROOT / "data" / "linkedin-staging.csv"
 JSON_STAGING_PATH = ROOT / "data" / "linkedin-staging.json"
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from blocklist import blocklist_reason, is_blocklisted  # noqa: E402
+
 CSV_FIELDNAMES = [
     "status",
     "found_date",
@@ -48,7 +51,7 @@ CSV_FIELDNAMES = [
     "entry_id",
 ]
 
-SKIP_STATUSES = {"skip", "skipped", "merged", "rejected", "ignore"}
+SKIP_STATUSES = {"skip", "skipped", "merged", "rejected", "ignore", "blocklisted"}
 IMPORT_STATUSES = {"", "new", "pending", "queue"}
 
 REGION_MAP = {
@@ -245,9 +248,9 @@ def existing_keys(entries: list[dict]) -> tuple[set[str], set[str]]:
     return ids, urls
 
 
-def merge_csv_rows(data: dict, *, auto_publish: bool) -> tuple[int, int, int]:
+def merge_csv_rows(data: dict, *, auto_publish: bool) -> tuple[int, int, int, int]:
     if not CSV_PATH.exists():
-        return 0, 0, 0
+        return 0, 0, 0, 0
 
     entries: list[dict] = data.setdefault("entries", [])
     ids, urls = existing_keys(entries)
@@ -255,10 +258,10 @@ def merge_csv_rows(data: dict, *, auto_publish: bool) -> tuple[int, int, int]:
     with CSV_PATH.open(encoding="utf-8", newline="") as f:
         reader = csv.DictReader(f)
         if not reader.fieldnames:
-            return 0, 0, 0
+            return 0, 0, 0, 0
         rows = list(reader)
 
-    added = skipped = errors = 0
+    added = skipped = errors = blocklisted = 0
     for row in rows:
         status = (row.get("status") or "").strip().lower()
         if status in SKIP_STATUSES:
@@ -276,6 +279,17 @@ def merge_csv_rows(data: dict, *, auto_publish: bool) -> tuple[int, int, int]:
             continue
 
         url = normalize_url(entry["source_url"])
+        blocked, _ = is_blocklisted(url, entry["id"])
+        if blocked:
+            reason = blocklist_reason(url, entry["id"]) or "previously removed"
+            print(f"CSV row blocklisted ({reason}): {row.get('post_url')}", file=sys.stderr)
+            row["status"] = "blocklisted"
+            row["entry_id"] = entry["id"]
+            row["editor_notes"] = f"blocklisted: {reason}"
+            blocklisted += 1
+            skipped += 1
+            continue
+
         if entry["id"] in ids or (url and url in urls):
             row["status"] = "merged"
             row["entry_id"] = entry["id"]
@@ -295,7 +309,7 @@ def merge_csv_rows(data: dict, *, auto_publish: bool) -> tuple[int, int, int]:
         writer.writeheader()
         writer.writerows(rows)
 
-    return added, skipped, errors
+    return added, skipped, errors, blocklisted
 
 
 def merge_json_staging(data: dict, *, auto_publish: bool) -> tuple[int, int]:
@@ -330,6 +344,11 @@ def merge_json_staging(data: dict, *, auto_publish: bool) -> tuple[int, int]:
 
         url = normalize_url(entry.get("source_url"))
         entry_id = entry.get("id")
+        blocked, _ = is_blocklisted(url, entry_id)
+        if blocked:
+            skipped += 1
+            continue
+
         if not entry_id:
             if not url:
                 skipped += 1
@@ -361,7 +380,9 @@ def main() -> int:
 
     auto_publish = auto_publish_enabled(args.require_approval)
     data = load_entries()
-    csv_added, csv_skipped, csv_errors = merge_csv_rows(data, auto_publish=auto_publish)
+    csv_added, csv_skipped, csv_errors, csv_blocklisted = merge_csv_rows(
+        data, auto_publish=auto_publish
+    )
     json_added, json_skipped = merge_json_staging(data, auto_publish=auto_publish)
 
     if csv_added or json_added:
@@ -377,7 +398,8 @@ def main() -> int:
     mode = "auto-publish" if auto_publish else "require-approval"
     print(
         f"Merge complete ({mode}): +{csv_added} from CSV, +{json_added} from JSON staging "
-        f"({csv_skipped + json_skipped} skipped, {csv_errors} CSV errors). "
+        f"({csv_skipped + json_skipped} skipped, {csv_blocklisted} blocklisted, "
+        f"{csv_errors} CSV errors). "
         f"{total} entries total ({published} published, {pending} pending)."
     )
     return 1 if csv_errors else 0

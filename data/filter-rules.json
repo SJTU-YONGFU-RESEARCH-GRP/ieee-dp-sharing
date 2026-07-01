@@ -1,0 +1,33 @@
+{
+  "version": "1.0.0",
+  "min_relevance_hits": 1,
+  "relevance_keywords": [
+    "ieee",
+    "dataport",
+    "data port",
+    "data-port",
+    "dataset",
+    "datasets",
+    "repository",
+    "doi",
+    "open data",
+    "research data",
+    "reproducib",
+    "metadata"
+  ],
+  "hashtag_keywords": ["ieeedataport", "ieee-dataport"],
+  "spam_patterns": [
+    "click here",
+    "limited time offer",
+    "work from home",
+    "crypto",
+    "forex",
+    "dm me for",
+    "whatsapp"
+  ],
+  "remove_pure_negative": true,
+  "negative_score_threshold": -0.45,
+  "keep_mixed_constructive": true,
+  "min_text_length": 20,
+  "max_text_length": 5000
+}

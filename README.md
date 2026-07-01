@@ -10,7 +10,9 @@ A static showcase website for curated IEEE DataPort member reflections, testimon
 
 1. Editors search LinkedIn for **`#ieeedataport`** and add rows to [`data/linkedin-staging.csv`](data/linkedin-staging.csv)
 2. `python3 scripts/merge_staging.py` auto-publishes new rows (`AUTO_PUBLISH=true` by default)
-3. Daily pipeline: merge → enrich → push → site deploy
+3. Daily pipeline: merge → **filter** → enrich → push → site deploy
+
+Negative/irrelevant posts are removed automatically; removed URLs are **blocklisted** so they are not re-imported. See [`docs/CONTENT_FILTER.md`](docs/CONTENT_FILTER.md).
 
 To require manual approval: `AUTO_PUBLISH=false python3 scripts/merge_staging.py --require-approval`
 

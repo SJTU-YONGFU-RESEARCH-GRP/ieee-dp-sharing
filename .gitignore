@@ -6,3 +6,5 @@ dist/
 .env
 .env.*
 data/linkedin-staging.json
+__pycache__/
+*.pyc

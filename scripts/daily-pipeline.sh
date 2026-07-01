@@ -7,6 +7,7 @@
 # Steps:
 #   [import]  optional LinkedIn API staging (no-op until secrets configured)
 #   [merge]   scripts/merge_staging.py — CSV #ieeedataport → entries.json (auto-publish)
+#   [filter]  scripts/score_entries.py — remove negative/irrelevant + blocklist
 #   [enrich]  scripts/enrich.py — sentiment/topics for approved entries
 #   [validate] scripts/validate.py
 #   [build]   NODE_ENV=production npm run build (GitHub Pages base path)
@@ -147,6 +148,9 @@ fi
 echo "==> [merge] scripts/merge_staging.py"
 run python3 scripts/merge_staging.py
 
+echo "==> [filter] scripts/score_entries.py"
+run python3 scripts/score_entries.py --apply
+
 echo "==> [enrich] scripts/enrich.py"
 run python3 scripts/enrich.py
 
@@ -191,7 +195,7 @@ GIT_TOPLEVEL="$(git rev-parse --show-toplevel)"
 cd "$GIT_TOPLEVEL"
 
 echo "==> [git] stage data changes"
-run git add data/entries.json data/linkedin-staging.csv data/.deploy-stamp data/linkedin-staging.json 2>/dev/null || run git add data/entries.json data/linkedin-staging.csv data/.deploy-stamp
+run git add data/entries.json data/linkedin-staging.csv data/blocklist.json data/removal-log.json data/.deploy-stamp data/linkedin-staging.json 2>/dev/null || run git add data/entries.json data/linkedin-staging.csv data/blocklist.json data/removal-log.json data/.deploy-stamp
 
 if [[ "$DRY_RUN" -eq 1 ]]; then
   run git status --short
