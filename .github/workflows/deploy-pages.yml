@@ -1,10 +1,10 @@
 # GitHub Pages: build Astro app at repo root and deploy dist/
 #
-# Triggered by push to main/master (including daily-pipeline.yml commits).
-#
 # Site URL: https://<org>.github.io/<repo>/
 #
-# Setup (once): Settings → Pages → Build and deployment → Source: GitHub Actions
+# ONE-TIME (required or deploy job returns 404):
+#   Settings → Pages → Build and deployment → Source: GitHub Actions
+#   https://github.com/SJTU-YONGFU-RESEARCH-GRP/ieee-dp-sharing/settings/pages
 
 name: Deploy to GitHub Pages
 
@@ -27,6 +27,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
 
       - uses: actions/setup-node@v4
         with:
@@ -55,5 +58,6 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - id: deployment
+      - name: Deploy to GitHub Pages
+        id: deployment
         uses: actions/deploy-pages@v4

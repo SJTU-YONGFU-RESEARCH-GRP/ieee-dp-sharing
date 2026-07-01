@@ -100,7 +100,26 @@ Implement `fetch_organization_posts()` in `scripts/linkedin_import.py`. Staged r
 
 ## Troubleshooting
 
-### Site returns 404
+### Deploy job: `Failed to create deployment (status: 404)`
+
+This exact error means **GitHub Pages is not enabled** for the repository (or not set to **GitHub Actions**).
+
+**Fix (one time, in the browser):**
+
+1. Open **[ieee-dp-sharing → Settings → Pages](https://github.com/SJTU-YONGFU-RESEARCH-GRP/ieee-dp-sharing/settings/pages)**
+2. Under **Build and deployment**, open **Source**
+3. Choose **`GitHub Actions`** (not “Deploy from a branch”)
+4. Click **Save** if shown
+5. Go to **Actions → Deploy to GitHub Pages → Re-run all jobs**
+
+**If the Source dropdown is missing or disabled:**
+
+- Your org may block Pages — an org owner must allow Pages under **Organization → Settings → Member privileges** (or **Pages** policy).
+- On **GitHub Free**, the site URL is only **public** if the repository is **public** (**Settings → General → Change repository visibility**).
+
+The workflow cannot enable Pages by itself; `actions/deploy-pages` needs Pages turned on in Settings first.
+
+### Site returns 404 in the browser
 
 A GitHub 404 at `https://<org>.github.io/<repo>/` almost always means **Pages is not published yet**, not a bad local build.
 
