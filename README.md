@@ -18,10 +18,42 @@ To require manual approval: `AUTO_PUBLISH=false python3 scripts/merge_staging.py
 
 Full guide: [`docs/EDITORIAL_WORKFLOW.md`](docs/EDITORIAL_WORKFLOW.md)
 
-### Member submit + manual JSON
+### Member submit + form import
 
-1. [**Submit**](src/pages/submit.astro) page → JSON for a PR, or edit [`data/entries.json`](data/entries.json) directly
-2. Approve with `approve_entry.py` or set moderation fields manually
+1. [**Submit**](src/pages/submit.astro) page → **CSV row** for `linkedin-staging.csv` (recommended), JSON, or [GitHub issue](.github/ISSUE_TEMPLATE/member-submission.yml)
+2. Google Form → download CSV → `python3 scripts/import_form_export.py data/inbox/member-form-export.csv`
+3. Guide: [`docs/MEMBER_SUBMISSION.md`](docs/MEMBER_SUBMISSION.md)
+
+### Editor bookmarklet (LinkedIn discovery)
+
+1. Open **Editor tools** (`/editor-tools/`) on the live site
+2. Drag **IEEE DP Capture** to bookmarks bar
+3. On a LinkedIn post → click bookmarklet → paste CSV row into `data/linkedin-staging.csv`
+
+Full guide: [`docs/EDITORIAL_WORKFLOW.md`](docs/EDITORIAL_WORKFLOW.md)
+
+### IEEE case studies (automated)
+
+`python3 scripts/import_ieee_stories.py` imports public member quotes from [`data/ieee-story-sources.json`](data/ieee-story-sources.json) (ieee-dataport.org + transmitter.ieee.org). Runs in the daily pipeline before merge.
+
+### Twitter / X (`@IEEEDataPort`, optional)
+
+1. Add repository secret `TWITTER_BEARER_TOKEN` (X API v2)
+2. Optional: `TWITTER_USERNAME` (default `IEEEDataPort`)
+3. `python3 scripts/twitter_import.py` → `data/twitter-staging.json` → `merge_staging.py`
+
+Official account posts only — not member hashtag search.
+
+### Facebook Page (optional)
+
+1. Create a [Meta for Developers](https://developers.facebook.com/) app with **pages_read_engagement**
+2. Generate a **Page access token** for the IEEE DataPort Facebook Page you manage
+3. Add repository secrets:
+   - `FACEBOOK_PAGE_ACCESS_TOKEN`
+   - `FACEBOOK_PAGE_ID` (numeric) or `FACEBOOK_PAGE_USERNAME`
+4. `python3 scripts/facebook_import.py` → `data/facebook-staging.json` → `merge_staging.py`
+
+Official Page posts only — not member profiles, groups, or public scraping.
 
 ### LinkedIn API (future, IEEE org pages only)
 
@@ -41,7 +73,8 @@ Full guide: [`docs/EDITORIAL_WORKFLOW.md`](docs/EDITORIAL_WORKFLOW.md)
 | Showcase | `/` | Filterable testimonial cards |
 | Insights | `/insights/` | Topic and sentiment summaries |
 | Moderation | `/moderation/` | Pending queue for editors |
-| Submit | `/submit/` | Client-side JSON generator + PR instructions |
+| Editor tools | `/editor-tools/` | LinkedIn capture bookmarklet + import docs |
+| Submit | `/submit/` | CSV/JSON generator + member funnel |
 
 ## Data schema
 

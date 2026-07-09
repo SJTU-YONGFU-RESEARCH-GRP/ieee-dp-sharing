@@ -54,6 +54,8 @@ def validate_entry(entry: dict, index: int) -> list[str]:
     allowed_source = {
         "linkedin_post",
         "linkedin_comment",
+        "twitter_post",
+        "facebook_post",
         "manual_submission",
         "event_feedback",
         "email_consented",

@@ -1,0 +1,75 @@
+name: Member reflection submission
+description: Submit a public IEEE DataPort testimonial for the Member Voices showcase
+title: "[Submission] "
+labels: ["member-submission", "content"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for sharing your IEEE DataPort experience. Submissions are reviewed before publication.
+        If you posted on LinkedIn with **#ieeedataport**, include the post URL below.
+
+  - type: input
+    id: display_name
+    attributes:
+      label: Full name
+      description: As you want it shown on the showcase
+    validations:
+      required: true
+
+  - type: input
+    id: affiliation
+    attributes:
+      label: Affiliation
+      placeholder: University or organization
+
+  - type: textarea
+    id: text
+    attributes:
+      label: Reflection text
+      description: What would you like to share about IEEE DataPort? (min 10 characters)
+    validations:
+      required: true
+
+  - type: input
+    id: post_url
+    attributes:
+      label: LinkedIn post URL (if applicable)
+      placeholder: https://www.linkedin.com/posts/...
+
+  - type: dropdown
+    id: region
+    attributes:
+      label: Region
+      options:
+        - ""
+        - North America
+        - Europe
+        - Asia-Pacific
+        - Latin America
+        - Middle East & Africa
+        - Global
+
+  - type: input
+    id: society
+    attributes:
+      label: IEEE society (optional)
+
+  - type: input
+    id: dataset_topic
+    attributes:
+      label: Dataset / research topic (optional)
+
+  - type: checkboxes
+    id: consent
+    attributes:
+      label: Consent
+      options:
+        - label: I confirm this content is public, accurate, and I consent to IEEE DataPort republishing it with the attribution above.
+          required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        **Editor:** After approval, convert to a `linkedin-staging.csv` row or run:
+        `python3 scripts/import_form_export.py` if batched from Google Form.

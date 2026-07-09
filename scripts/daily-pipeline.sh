@@ -141,8 +141,18 @@ echo "==> Pages base: ${BASE_PATH}"
 echo "==> repo root: $REPO_ROOT"
 
 if [[ "$NO_IMPORT" -eq 0 ]]; then
+  echo "==> [import] IEEE case studies (ieee-dataport.org)"
+  run python3 scripts/import_ieee_stories.py || true
   echo "==> [import] LinkedIn API staging (optional)"
   run python3 scripts/linkedin_import.py || true
+  echo "==> [import] Twitter / X API staging (optional)"
+  run python3 scripts/twitter_import.py || true
+  echo "==> [import] Facebook Graph API staging (optional)"
+  run python3 scripts/facebook_import.py || true
+  if [[ -f "$REPO_ROOT/data/inbox/member-form-export.csv" ]]; then
+    echo "==> [import] Google Form CSV from data/inbox/"
+    run python3 scripts/import_form_export.py "$REPO_ROOT/data/inbox/member-form-export.csv"
+  fi
 fi
 
 echo "==> [merge] scripts/merge_staging.py"
@@ -199,7 +209,7 @@ GIT_TOPLEVEL="$(git rev-parse --show-toplevel)"
 cd "$GIT_TOPLEVEL"
 
 echo "==> [git] stage data changes"
-run git add data/entries.json data/linkedin-staging.csv data/blocklist.json data/removal-log.json data/pipeline-status.json data/.deploy-stamp data/linkedin-staging.json 2>/dev/null || run git add data/entries.json data/linkedin-staging.csv data/blocklist.json data/removal-log.json data/pipeline-status.json data/.deploy-stamp
+run git add data/entries.json data/linkedin-staging.csv data/blocklist.json data/removal-log.json data/pipeline-status.json data/.deploy-stamp data/linkedin-staging.json data/twitter-staging.json data/facebook-staging.json 2>/dev/null || run git add data/entries.json data/linkedin-staging.csv data/blocklist.json data/removal-log.json data/pipeline-status.json data/.deploy-stamp
 
 if [[ "$DRY_RUN" -eq 1 ]]; then
   run git status --short

@@ -6,5 +6,7 @@ dist/
 .env
 .env.*
 data/linkedin-staging.json
+data/twitter-staging.json
+data/facebook-staging.json
 __pycache__/
 *.pyc

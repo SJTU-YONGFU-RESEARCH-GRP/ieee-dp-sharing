@@ -1,5 +1,392 @@
 {
   "version": "1.0.0",
   "updated_at": "2026-07-09",
-  "entries": []
+  "entries": [
+    {
+      "id": "aqsa-abu-bakar-nust-2024",
+      "text": "Overall, my experience with IEEE DataPort has been positive. It is a valuable platform for securely storing, sharing, and citing research data, and it supports open research and collaboration within the research community.",
+      "display_name": "Aqsa Abu Bakar",
+      "affiliation": "NUST / AITeC",
+      "profile_url": null,
+      "source_type": "manual_submission",
+      "source_url": "https://ieee-dataport.org/node/103858",
+      "event": null,
+      "society": null,
+      "region": "Asia-Pacific",
+      "dataset_topic": "Computer Vision and Imaging",
+      "post_type": "testimonial",
+      "consent_status": "granted",
+      "consent_note": "Public member story on ieee-dataport.org or transmitter.ieee.org; republished with attribution for editorial showcase.",
+      "moderation_status": "approved",
+      "approved_by": "ieee-story-import",
+      "approved_at": "2026-07-02",
+      "submitted_at": "2024-01-01",
+      "published_at": "2026-07-02",
+      "featured": true,
+      "tags": [
+        "citation",
+        "open-data",
+        "reproducibility"
+      ],
+      "enrichment": {
+        "sentiment": "neutral",
+        "sentiment_score": 0.0,
+        "topics": [
+          "citation",
+          "community",
+          "discovery",
+          "open-data",
+          "reproducibility"
+        ],
+        "quote": "It is a valuable platform for securely storing, sharing, and citing research data, and it supports open research and collaboration within the research community.",
+        "enriched_at": "2026-07-01T21:21:25Z"
+      }
+    },
+    {
+      "id": "francesca-meneghello-padova-2024",
+      "text": "A benefit of IEEE DataPort is its visibility, as it is accessible to the entire IEEE community and, through the open access option, by any interested researcher.",
+      "display_name": "Francesca Meneghello",
+      "affiliation": "University of Padova",
+      "profile_url": null,
+      "source_type": "manual_submission",
+      "source_url": "https://ieee-dataport.org/content/uploading-dataset-ieee-dataport-advance-machine-learning-algorithms",
+      "event": null,
+      "society": "IEEE Communications Society",
+      "region": "Europe",
+      "dataset_topic": "Wireless Sensing / Machine Learning",
+      "post_type": "testimonial",
+      "consent_status": "granted",
+      "consent_note": "Public member story on ieee-dataport.org or transmitter.ieee.org; republished with attribution for editorial showcase.",
+      "moderation_status": "approved",
+      "approved_by": "ieee-story-import",
+      "approved_at": "2026-07-02",
+      "submitted_at": "2024-01-01",
+      "published_at": "2026-07-02",
+      "featured": false,
+      "tags": [
+        "discovery",
+        "open-data",
+        "reproducibility"
+      ],
+      "enrichment": {
+        "sentiment": "neutral",
+        "sentiment_score": 0.0,
+        "topics": [
+          "community",
+          "discovery",
+          "open-data",
+          "reproducibility"
+        ],
+        "quote": "A benefit of IEEE DataPort is its visibility, as it is accessible to the entire IEEE community and, through the open access option, by any interested researcher.",
+        "enriched_at": "2026-07-01T21:21:25Z"
+      }
+    },
+    {
+      "id": "victor-asanza-espol-2024",
+      "text": "IEEE DataPort provides an instant and unique digital object identifier (DOI). This DOI provides a permanent and an actionable source of truth for my data, making it easy for any researcher to find.",
+      "display_name": "Victor Asanza",
+      "affiliation": "Escuela Superior Politécnica del Litoral (ESPOL)",
+      "profile_url": null,
+      "source_type": "manual_submission",
+      "source_url": "https://ieee-dataport.org/content/sharing-ai-data-through-ieee-dataport",
+      "event": null,
+      "society": null,
+      "region": "Latin America",
+      "dataset_topic": "AI / Biomedical Signals",
+      "post_type": "testimonial",
+      "consent_status": "granted",
+      "consent_note": "Public member story on ieee-dataport.org or transmitter.ieee.org; republished with attribution for editorial showcase.",
+      "moderation_status": "approved",
+      "approved_by": "ieee-story-import",
+      "approved_at": "2026-07-02",
+      "submitted_at": "2024-01-01",
+      "published_at": "2026-07-02",
+      "featured": false,
+      "tags": [
+        "citation",
+        "metadata"
+      ],
+      "enrichment": {
+        "sentiment": "positive",
+        "sentiment_score": 0.6,
+        "topics": [
+          "citation",
+          "discovery",
+          "metadata",
+          "usability"
+        ],
+        "quote": "This DOI provides a permanent and an actionable source of truth for my data, making it easy for any researcher to find.",
+        "enriched_at": "2026-07-01T21:21:25Z"
+      }
+    },
+    {
+      "id": "solomiia-fedushko-lviv-2024",
+      "text": "The IEEE DataPort platform has a user-friendly design, and all portal functionality is intuitively accessible. It was also equally important for me to join the data community, access other research datasets, and receive information on recent datasets and news regularly.",
+      "display_name": "Solomiia Fedushko",
+      "affiliation": "Lviv Polytechnic National University",
+      "profile_url": null,
+      "source_type": "manual_submission",
+      "source_url": "https://ieee-dataport.org/content/lviv-professor-uses-ieee-dataport-upload-social-media-datasets-identifying-propaganda",
+      "event": null,
+      "society": null,
+      "region": "Europe",
+      "dataset_topic": "Social Media / Propaganda Detection",
+      "post_type": "testimonial",
+      "consent_status": "granted",
+      "consent_note": "Public member story on ieee-dataport.org or transmitter.ieee.org; republished with attribution for editorial showcase.",
+      "moderation_status": "approved",
+      "approved_by": "ieee-story-import",
+      "approved_at": "2026-07-02",
+      "submitted_at": "2024-01-01",
+      "published_at": "2026-07-02",
+      "featured": false,
+      "tags": [
+        "community",
+        "discovery",
+        "open-data"
+      ],
+      "enrichment": {
+        "sentiment": "neutral",
+        "sentiment_score": 0.0,
+        "topics": [
+          "community",
+          "discovery",
+          "open-data"
+        ],
+        "quote": "It was also equally important for me to join the data community, access other research datasets, and receive information on recent datasets and news regularly.",
+        "enriched_at": "2026-07-01T21:21:25Z"
+      }
+    },
+    {
+      "id": "suraksha-pokhrel-tribhuvan-2024",
+      "text": "For a dataset on a virus that has affected the entire world, it is incredibly valuable to have the global public reach afforded by the IEEE DataPort Platform and the IEEE community. With IEEE DataPort's open access, my data is now available around the world.",
+      "display_name": "Suraksha Pokhrel",
+      "affiliation": "Tribhuvan University",
+      "profile_url": null,
+      "source_type": "manual_submission",
+      "source_url": "https://ieee-dataport.org/content/reaching-broader-community-ieee-dataport",
+      "event": null,
+      "society": null,
+      "region": "Asia-Pacific",
+      "dataset_topic": "COVID-19 Twitter Analytics",
+      "post_type": "testimonial",
+      "consent_status": "granted",
+      "consent_note": "Public member story on ieee-dataport.org or transmitter.ieee.org; republished with attribution for editorial showcase.",
+      "moderation_status": "approved",
+      "approved_by": "ieee-story-import",
+      "approved_at": "2026-07-02",
+      "submitted_at": "2024-01-01",
+      "published_at": "2026-07-02",
+      "featured": false,
+      "tags": [
+        "community",
+        "discovery",
+        "open-data"
+      ],
+      "enrichment": {
+        "sentiment": "neutral",
+        "sentiment_score": 0.0,
+        "topics": [
+          "community",
+          "discovery",
+          "open-data"
+        ],
+        "quote": "For a dataset on a virus that has affected the entire world, it is incredibly valuable to have the global public reach afforded by the IEEE DataPort Platform and the IEEE community.",
+        "enriched_at": "2026-07-01T21:21:25Z"
+      }
+    },
+    {
+      "id": "ieee-pandarasamy-arjunan-37b149392a",
+      "text": "As a researcher, there are many advantages to using the IEEE DataPort platform. The platform helped me achieve my research goals, especially in terms of sharing reproducible research datasets and code with a wider research community.",
+      "display_name": "Pandarasamy Arjunan",
+      "affiliation": "Berkeley Education Alliance for Research in Singapore",
+      "profile_url": null,
+      "source_type": "manual_submission",
+      "source_url": "https://ieee-dataport.org/content/using-datasets-develop-automated-plant-disease-detection-systems",
+      "event": null,
+      "society": null,
+      "region": "Asia-Pacific",
+      "dataset_topic": "Agriculture / Plant Disease Detection",
+      "post_type": "testimonial",
+      "consent_status": "granted",
+      "consent_note": "Public member story on ieee-dataport.org or transmitter.ieee.org; republished with attribution for editorial showcase.",
+      "moderation_status": "approved",
+      "approved_by": "ieee-story-import",
+      "approved_at": "2026-07-02",
+      "submitted_at": "2024-01-01",
+      "published_at": "2026-07-02",
+      "featured": false,
+      "tags": [
+        "community",
+        "open-data",
+        "reproducibility"
+      ],
+      "enrichment": {
+        "sentiment": "positive",
+        "sentiment_score": 0.6,
+        "topics": [
+          "community",
+          "discovery",
+          "open-data",
+          "reproducibility"
+        ],
+        "quote": "The platform helped me achieve my research goals, especially in terms of sharing reproducible research datasets and code with a wider research community.",
+        "enriched_at": "2026-07-01T21:21:25Z"
+      }
+    },
+    {
+      "id": "ieee-muhammad-sabirin-hadis-38d5f83225",
+      "text": "The IEEE DataPort Platform provides comprehensive categorization that allows me to easily find the data I need to perform my research. And best of all: the data is FREE to download! IEEE DataPort is a large and supportive community.",
+      "display_name": "Muhammad Sabirin Hadis",
+      "affiliation": "STMIK AKBA",
+      "profile_url": null,
+      "source_type": "manual_submission",
+      "source_url": "https://ieee-dataport.org/content/ieee-dataport-provides-more-insight-problem-solving",
+      "event": null,
+      "society": null,
+      "region": "Asia-Pacific",
+      "dataset_topic": "Journal Indexing Metadata",
+      "post_type": "testimonial",
+      "consent_status": "granted",
+      "consent_note": "Public member story on ieee-dataport.org or transmitter.ieee.org; republished with attribution for editorial showcase.",
+      "moderation_status": "approved",
+      "approved_by": "ieee-story-import",
+      "approved_at": "2026-07-02",
+      "submitted_at": "2024-01-01",
+      "published_at": "2026-07-02",
+      "featured": false,
+      "tags": [
+        "community",
+        "discovery",
+        "open-data"
+      ],
+      "enrichment": {
+        "sentiment": "neutral",
+        "sentiment_score": 0.0,
+        "topics": [
+          "community",
+          "discovery",
+          "open-data"
+        ],
+        "quote": "The IEEE DataPort Platform provides comprehensive categorization that allows me to easily find the data I need to perform my research.",
+        "enriched_at": "2026-07-01T21:21:25Z"
+      }
+    },
+    {
+      "id": "ieee-rabindra-lamsal-4d574cb48c",
+      "text": "I strongly support the idea of having healthy communication with the dataset owner to understand the data completely. And I find IEEE DataPort is nailing this point.",
+      "display_name": "Rabindra Lamsal",
+      "affiliation": "Researcher, COVID-19 Twitter datasets",
+      "profile_url": null,
+      "source_type": "manual_submission",
+      "source_url": "https://transmitter.ieee.org/3-amazing-research-projects-happening-on-ieee-dataport",
+      "event": null,
+      "society": null,
+      "region": "Asia-Pacific",
+      "dataset_topic": "COVID-19 Twitter Sentiment",
+      "post_type": "testimonial",
+      "consent_status": "granted",
+      "consent_note": "Public member story on ieee-dataport.org or transmitter.ieee.org; republished with attribution for editorial showcase.",
+      "moderation_status": "approved",
+      "approved_by": "ieee-story-import",
+      "approved_at": "2026-07-02",
+      "submitted_at": "2024-01-01",
+      "published_at": "2026-07-02",
+      "featured": false,
+      "tags": [
+        "citation",
+        "community",
+        "reproducibility"
+      ],
+      "enrichment": {
+        "sentiment": "neutral",
+        "sentiment_score": 0.0,
+        "topics": [
+          "citation",
+          "community",
+          "discovery",
+          "reproducibility"
+        ],
+        "quote": "I strongly support the idea of having healthy communication with the dataset owner to understand the data completely.",
+        "enriched_at": "2026-07-01T21:21:25Z"
+      }
+    },
+    {
+      "id": "ieee-hyunjae-kang-76e2376d1e",
+      "text": "The formal citation phrase including digital object identifier (DOI) provided by IEEE DataPort helped our project to meet goals such as number of citation records. We wanted to give a little help to other cybersecurity researchers.",
+      "display_name": "Hyunjae Kang",
+      "affiliation": "Cybersecurity / IoT intrusion detection researcher",
+      "profile_url": null,
+      "source_type": "manual_submission",
+      "source_url": "https://transmitter.ieee.org/3-amazing-research-projects-happening-on-ieee-dataport",
+      "event": null,
+      "society": null,
+      "region": "Asia-Pacific",
+      "dataset_topic": "Cybersecurity / IoT",
+      "post_type": "testimonial",
+      "consent_status": "granted",
+      "consent_note": "Public member story on ieee-dataport.org or transmitter.ieee.org; republished with attribution for editorial showcase.",
+      "moderation_status": "approved",
+      "approved_by": "ieee-story-import",
+      "approved_at": "2026-07-02",
+      "submitted_at": "2024-01-01",
+      "published_at": "2026-07-02",
+      "featured": false,
+      "tags": [
+        "citation",
+        "open-data",
+        "reproducibility"
+      ],
+      "enrichment": {
+        "sentiment": "positive",
+        "sentiment_score": 0.6,
+        "topics": [
+          "citation",
+          "discovery",
+          "open-data",
+          "reproducibility"
+        ],
+        "quote": "The formal citation phrase including digital object identifier (DOI) provided by IEEE DataPort helped our project to meet goals such as number of citation records.",
+        "enriched_at": "2026-07-01T21:21:25Z"
+      }
+    },
+    {
+      "id": "ieee-prasanna-porwal-947c255b3e",
+      "text": "The popularity of IEEE has helped with increasing visibility of our work by making data available to researchers on a common data-sharing platform.",
+      "display_name": "Prasanna Porwal",
+      "affiliation": "IDRiD diabetic retinopathy dataset researcher",
+      "profile_url": null,
+      "source_type": "manual_submission",
+      "source_url": "https://transmitter.ieee.org/3-amazing-research-projects-happening-on-ieee-dataport",
+      "event": null,
+      "society": null,
+      "region": "Asia-Pacific",
+      "dataset_topic": "Medical Imaging / Diabetic Retinopathy",
+      "post_type": "testimonial",
+      "consent_status": "granted",
+      "consent_note": "Public member story on ieee-dataport.org or transmitter.ieee.org; republished with attribution for editorial showcase.",
+      "moderation_status": "approved",
+      "approved_by": "ieee-story-import",
+      "approved_at": "2026-07-02",
+      "submitted_at": "2024-01-01",
+      "published_at": "2026-07-02",
+      "featured": false,
+      "tags": [
+        "citation",
+        "discovery",
+        "open-data"
+      ],
+      "enrichment": {
+        "sentiment": "positive",
+        "sentiment_score": 0.6,
+        "topics": [
+          "citation",
+          "discovery",
+          "open-data"
+        ],
+        "quote": "The popularity of IEEE has helped with increasing visibility of our work by making data available to researchers on a common data-sharing platform.",
+        "enriched_at": "2026-07-01T21:21:25Z"
+      }
+    }
+  ]
 }

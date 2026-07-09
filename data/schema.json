@@ -40,7 +40,7 @@
     },
     "source_type": {
       "type": "string",
-      "enum": ["linkedin_post", "linkedin_comment", "manual_submission", "event_feedback", "email_consented"]
+      "enum": ["linkedin_post", "linkedin_comment", "twitter_post", "facebook_post", "manual_submission", "event_feedback", "email_consented"]
     },
     "source_url": {
       "type": ["string", "null"],

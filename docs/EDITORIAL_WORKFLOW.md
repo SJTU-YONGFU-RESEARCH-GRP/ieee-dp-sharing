@@ -23,12 +23,21 @@ Moderation queue: `/moderation/`
 
 1. Log in to LinkedIn (normal browser).
 2. Open [#ieeedataport search on LinkedIn](https://www.linkedin.com/search/results/all/?keywords=%23ieeedataport%20&origin=GLOBAL_SEARCH_HEADER).
-3. For each relevant **public** post:
-   - Copy post URL
-   - Copy author name, affiliation, post text
-   - Note date found
+3. For each relevant **public** post, either:
+   - **Bookmarklet (fast):** install **IEEE DP Capture** from the site’s [Editor tools](/editor-tools/) page, open the post, click the bookmarklet → CSV row copied → paste into `linkedin-staging.csv`
+   - **Manual:** copy post URL, author, text, affiliation
 
 Do **not** collect private messages, emails, or profile data beyond what is needed for attribution.
+
+## Step 1b — Member submissions (no LinkedIn required)
+
+Members can submit via the [Submit](/submit/) page, [GitHub issue template](https://github.com/SJTU-YONGFU-RESEARCH-GRP/ieee-dp-sharing/issues/new?template=member-submission.yml), or Google Form.
+
+See [`docs/MEMBER_SUBMISSION.md`](MEMBER_SUBMISSION.md) for Google Form import:
+
+```bash
+python3 scripts/import_form_export.py data/inbox/member-form-export.csv
+```
 
 ## Step 2 — Add a CSV row
 
@@ -107,6 +116,10 @@ When API access is approved, `scripts/linkedin_import.py` can stage **IEEE-owned
 | Command | Purpose |
 |---------|---------|
 | `python3 scripts/merge_staging.py` | Import CSV (+ JSON staging) → `entries.json` |
+| `python3 scripts/import_ieee_stories.py` | Import ieee-dataport.org case studies |
+| `python3 scripts/twitter_import.py` | Import @IEEEDataPort tweets (needs API token) |
+| `python3 scripts/facebook_import.py` | Import IEEE DataPort Facebook Page (needs Page token) |
+| `python3 scripts/build_bookmarklet.py` | Rebuild editor bookmarklet (`prebuild` runs automatically) |
 | `python3 scripts/approve_entry.py <id> --by <editor>` | Approve for publication |
 | `python3 scripts/enrich.py` | Sentiment/topics on approved entries |
 | `python3 scripts/validate.py` | Schema check |

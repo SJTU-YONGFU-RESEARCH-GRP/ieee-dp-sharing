@@ -1,0 +1,101 @@
+{
+  "version": "1.0",
+  "description": "Curated IEEE DataPort member case studies — public ieee-dataport.org and transmitter.ieee.org pages.",
+  "sources": [
+    {
+      "url": "https://ieee-dataport.org/node/103858",
+      "display_name": "Aqsa Abu Bakar",
+      "affiliation": "NUST / AITeC",
+      "text": "Overall, my experience with IEEE DataPort has been positive. It is a valuable platform for securely storing, sharing, and citing research data, and it supports open research and collaboration within the research community.",
+      "region": "Asia-Pacific",
+      "dataset_topic": "Computer Vision and Imaging",
+      "featured": true,
+      "tags": ["citation", "reproducibility", "open-data"]
+    },
+    {
+      "url": "https://ieee-dataport.org/content/uploading-dataset-ieee-dataport-advance-machine-learning-algorithms",
+      "display_name": "Francesca Meneghello",
+      "affiliation": "University of Padova",
+      "text": "A benefit of IEEE DataPort is its visibility, as it is accessible to the entire IEEE community and, through the open access option, by any interested researcher.",
+      "region": "Europe",
+      "dataset_topic": "Wireless Sensing / Machine Learning",
+      "society": "IEEE Communications Society",
+      "tags": ["open-data", "reproducibility", "discovery"]
+    },
+    {
+      "url": "https://ieee-dataport.org/content/sharing-ai-data-through-ieee-dataport",
+      "display_name": "Victor Asanza",
+      "affiliation": "Escuela Superior Politécnica del Litoral (ESPOL)",
+      "text": "IEEE DataPort provides an instant and unique digital object identifier (DOI). This DOI provides a permanent and an actionable source of truth for my data, making it easy for any researcher to find.",
+      "region": "Latin America",
+      "dataset_topic": "AI / Biomedical Signals",
+      "tags": ["citation", "metadata"]
+    },
+    {
+      "url": "https://ieee-dataport.org/content/lviv-professor-uses-ieee-dataport-upload-social-media-datasets-identifying-propaganda",
+      "display_name": "Solomiia Fedushko",
+      "affiliation": "Lviv Polytechnic National University",
+      "text": "The IEEE DataPort platform has a user-friendly design, and all portal functionality is intuitively accessible. It was also equally important for me to join the data community, access other research datasets, and receive information on recent datasets and news regularly.",
+      "region": "Europe",
+      "dataset_topic": "Social Media / Propaganda Detection",
+      "tags": ["community", "discovery", "open-data"]
+    },
+    {
+      "url": "https://ieee-dataport.org/content/reaching-broader-community-ieee-dataport",
+      "display_name": "Suraksha Pokhrel",
+      "affiliation": "Tribhuvan University",
+      "text": "For a dataset on a virus that has affected the entire world, it is incredibly valuable to have the global public reach afforded by the IEEE DataPort Platform and the IEEE community. With IEEE DataPort's open access, my data is now available around the world.",
+      "region": "Asia-Pacific",
+      "dataset_topic": "COVID-19 Twitter Analytics",
+      "tags": ["open-data", "discovery", "community"]
+    },
+    {
+      "url": "https://ieee-dataport.org/content/using-datasets-develop-automated-plant-disease-detection-systems",
+      "display_name": "Pandarasamy Arjunan",
+      "affiliation": "Berkeley Education Alliance for Research in Singapore",
+      "text": "As a researcher, there are many advantages to using the IEEE DataPort platform. The platform helped me achieve my research goals, especially in terms of sharing reproducible research datasets and code with a wider research community.",
+      "region": "Asia-Pacific",
+      "dataset_topic": "Agriculture / Plant Disease Detection",
+      "tags": ["reproducibility", "open-data", "community"]
+    },
+    {
+      "url": "https://ieee-dataport.org/content/ieee-dataport-provides-more-insight-problem-solving",
+      "display_name": "Muhammad Sabirin Hadis",
+      "affiliation": "STMIK AKBA",
+      "text": "The IEEE DataPort Platform provides comprehensive categorization that allows me to easily find the data I need to perform my research. And best of all: the data is FREE to download! IEEE DataPort is a large and supportive community.",
+      "region": "Asia-Pacific",
+      "dataset_topic": "Journal Indexing Metadata",
+      "tags": ["discovery", "open-data", "community"]
+    },
+    {
+      "url": "https://transmitter.ieee.org/3-amazing-research-projects-happening-on-ieee-dataport/",
+      "display_name": "Rabindra Lamsal",
+      "affiliation": "Researcher, COVID-19 Twitter datasets",
+      "text": "I strongly support the idea of having healthy communication with the dataset owner to understand the data completely. And I find IEEE DataPort is nailing this point.",
+      "region": "Asia-Pacific",
+      "dataset_topic": "COVID-19 Twitter Sentiment",
+      "tags": ["community", "reproducibility", "citation"],
+      "anchor": "lamsal"
+    },
+    {
+      "url": "https://transmitter.ieee.org/3-amazing-research-projects-happening-on-ieee-dataport/",
+      "display_name": "Hyunjae Kang",
+      "affiliation": "Cybersecurity / IoT intrusion detection researcher",
+      "text": "The formal citation phrase including digital object identifier (DOI) provided by IEEE DataPort helped our project to meet goals such as number of citation records. We wanted to give a little help to other cybersecurity researchers.",
+      "region": "Asia-Pacific",
+      "dataset_topic": "Cybersecurity / IoT",
+      "tags": ["citation", "open-data", "reproducibility"],
+      "anchor": "kang"
+    },
+    {
+      "url": "https://transmitter.ieee.org/3-amazing-research-projects-happening-on-ieee-dataport/",
+      "display_name": "Prasanna Porwal",
+      "affiliation": "IDRiD diabetic retinopathy dataset researcher",
+      "text": "The popularity of IEEE has helped with increasing visibility of our work by making data available to researchers on a common data-sharing platform.",
+      "region": "Asia-Pacific",
+      "dataset_topic": "Medical Imaging / Diabetic Retinopathy",
+      "tags": ["discovery", "open-data", "citation"],
+      "anchor": "porwal"
+    }
+  ]
+}

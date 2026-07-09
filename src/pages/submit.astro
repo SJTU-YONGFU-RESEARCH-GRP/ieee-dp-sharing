@@ -12,8 +12,12 @@ import { REGIONS, POST_TYPES, SOURCE_TYPES } from '../lib/types';
     <p>
       Share a public testimonial or your LinkedIn post about IEEE DataPort.
       If you posted with <strong>#ieeedataport</strong>, include the post URL below.
-      Submissions enter a moderation queue and are published only after consent and
-      editorial approval.
+      Submissions enter the staging pipeline and are published after editorial review.
+    </p>
+    <p class="muted">
+      Prefer a form? Use this page, open a
+      <a href="https://github.com/SJTU-YONGFU-RESEARCH-GRP/ieee-dp-sharing/issues/new?template=member-submission.yml" target="_blank" rel="noopener noreferrer">GitHub submission issue</a>,
+      or ask your editor for a Google Form link.
     </p>
   </section>
 
@@ -87,7 +91,8 @@ import { REGIONS, POST_TYPES, SOURCE_TYPES } from '../lib/types';
     </div>
 
     <div class="actions">
-      <button type="submit">Generate JSON for PR</button>
+      <button type="submit">Generate submission</button>
+      <button type="button" class="secondary" id="copy-csv">Copy CSV row</button>
       <button type="button" class="secondary" id="download-json">Download JSON</button>
     </div>
   </form>
@@ -95,12 +100,25 @@ import { REGIONS, POST_TYPES, SOURCE_TYPES } from '../lib/types';
   <section class="panel output-panel" id="output-panel" hidden>
     <h2>Next steps</h2>
     <p class="muted">
-      Copy this JSON into <code>data/entries.json</code> (or append as a new object in the
-      <code>entries</code> array), then open a pull request. An editor will set
-      <code>moderation_status</code> to <code>approved</code> before it goes live.
+      <strong>Recommended:</strong> copy the CSV row below and send it to your editor, or append it to
+      <code>data/linkedin-staging.csv</code> in a pull request. Editors run
+      <code>python3 scripts/merge_staging.py</code> to publish.
     </p>
+    <h3>CSV row (staging)</h3>
+    <pre id="csv-output"></pre>
+    <button type="button" id="copy-csv-output">Copy CSV row</button>
+    <h3>JSON (alternative)</h3>
     <pre id="json-output"></pre>
     <button type="button" id="copy-json">Copy JSON</button>
+  </section>
+
+  <section class="panel">
+    <h2>What happens next</h2>
+    <ul>
+      <li>Your row uses <code>consent_observed=author_submitted</code> when the consent box is checked.</li>
+      <li>LinkedIn URL is optional; without it the showcase shows “Curated submission” instead of “View source”.</li>
+      <li>The content filter may remove spam or off-topic submissions automatically.</li>
+    </ul>
   </section>
 
   <section class="panel">
@@ -115,13 +133,19 @@ import { REGIONS, POST_TYPES, SOURCE_TYPES } from '../lib/types';
 </Layout>
 
 <script>
+  import { buildStagingCsvLine } from '../lib/staging-csv';
+
   const form = document.getElementById('submit-form') as HTMLFormElement;
   const outputPanel = document.getElementById('output-panel') as HTMLElement;
   const jsonOutput = document.getElementById('json-output') as HTMLPreElement;
+  const csvOutput = document.getElementById('csv-output') as HTMLPreElement;
   const copyBtn = document.getElementById('copy-json') as HTMLButtonElement;
+  const copyCsvOutputBtn = document.getElementById('copy-csv-output') as HTMLButtonElement;
+  const copyCsvBtn = document.getElementById('copy-csv') as HTMLButtonElement;
   const downloadBtn = document.getElementById('download-json') as HTMLButtonElement;
 
   let latestJson = '';
+  let latestCsv = '';
 
   function slugify(text: string): string {
     return text
@@ -131,13 +155,13 @@ import { REGIONS, POST_TYPES, SOURCE_TYPES } from '../lib/types';
       .slice(0, 60);
   }
 
-  function buildEntry(formData: FormData) {
+  function buildFromForm(formData: FormData) {
     const name = String(formData.get('display_name') ?? '').trim();
     const text = String(formData.get('text') ?? '').trim();
     const tagsRaw = String(formData.get('tags') ?? '').trim();
     const tags = tagsRaw
       ? tagsRaw.split(',').map((t) => t.trim()).filter(Boolean)
-      : [];
+      : ['ieeedataport'];
     const consent = formData.get('consent') === 'on';
     const today = new Date().toISOString().slice(0, 10);
     const id = `${slugify(name)}-${today}`;
@@ -147,7 +171,7 @@ import { REGIONS, POST_TYPES, SOURCE_TYPES } from '../lib/types';
       return v || null;
     };
 
-    return {
+    const entry = {
       id,
       text,
       display_name: name,
@@ -171,23 +195,60 @@ import { REGIONS, POST_TYPES, SOURCE_TYPES } from '../lib/types';
       tags,
       enrichment: null,
     };
+
+    const csvLine = buildStagingCsvLine({
+      display_name: name,
+      text,
+      post_url: nullable('source_url'),
+      affiliation: nullable('affiliation'),
+      post_type: nullable('post_type'),
+      event: nullable('event'),
+      society: nullable('society'),
+      region: nullable('region'),
+      dataset_topic: nullable('dataset_topic'),
+      tags,
+      consent_observed: consent ? 'author_submitted' : 'unknown',
+      editor_notes: consent
+        ? 'Submitted via website form with display consent.'
+        : 'Submitted via website form; consent pending.',
+    });
+
+    return { entry, csvLine };
   }
 
-  function showJson(entry: object) {
+  function showOutput(entry: object, csvLine: string) {
     latestJson = JSON.stringify(entry, null, 2);
+    latestCsv = csvLine;
     jsonOutput.textContent = latestJson;
+    csvOutput.textContent = latestCsv;
     outputPanel.hidden = false;
     outputPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
+  async function copyText(text: string, button: HTMLButtonElement, label: string) {
+    if (!text) return;
+    await navigator.clipboard.writeText(text);
+    const prev = button.textContent;
+    button.textContent = 'Copied!';
+    setTimeout(() => {
+      button.textContent = prev ?? label;
+    }, 1500);
+  }
+
   form.addEventListener('submit', (e) => {
     e.preventDefault();
-    const entry = buildEntry(new FormData(form));
-    showJson(entry);
+    const { entry, csvLine } = buildFromForm(new FormData(form));
+    showOutput(entry, csvLine);
+  });
+
+  copyCsvBtn.addEventListener('click', async () => {
+    const { csvLine } = buildFromForm(new FormData(form));
+    latestCsv = csvLine;
+    await copyText(latestCsv, copyCsvBtn, 'Copy CSV row');
   });
 
   downloadBtn.addEventListener('click', () => {
-    const entry = buildEntry(new FormData(form));
+    const { entry } = buildFromForm(new FormData(form));
     latestJson = JSON.stringify(entry, null, 2);
     const blob = new Blob([latestJson], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
@@ -200,11 +261,12 @@ import { REGIONS, POST_TYPES, SOURCE_TYPES } from '../lib/types';
 
   copyBtn.addEventListener('click', async () => {
     if (!latestJson) return;
-    await navigator.clipboard.writeText(latestJson);
-    copyBtn.textContent = 'Copied!';
-    setTimeout(() => {
-      copyBtn.textContent = 'Copy JSON';
-    }, 1500);
+    await copyText(latestJson, copyBtn, 'Copy JSON');
+  });
+
+  copyCsvOutputBtn.addEventListener('click', async () => {
+    if (!latestCsv) return;
+    await copyText(latestCsv, copyCsvOutputBtn, 'Copy CSV row');
   });
 </script>
 
@@ -283,6 +345,13 @@ import { REGIONS, POST_TYPES, SOURCE_TYPES } from '../lib/types';
     overflow-x: auto;
     font-size: 0.82rem;
     line-height: 1.45;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  .output-panel h3 {
+    margin: 1.25rem 0 0.5rem;
+    font-size: 1rem;
   }
 
   .output-panel ul {

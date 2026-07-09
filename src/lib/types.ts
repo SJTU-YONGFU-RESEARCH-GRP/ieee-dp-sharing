@@ -3,6 +3,8 @@ export type ModerationStatus = 'draft' | 'pending' | 'approved' | 'rejected';
 export type SourceType =
   | 'linkedin_post'
   | 'linkedin_comment'
+  | 'twitter_post'
+  | 'facebook_post'
   | 'manual_submission'
   | 'event_feedback'
   | 'email_consented';
@@ -118,6 +120,8 @@ export const POST_TYPES = [
 export const SOURCE_TYPES = [
   'linkedin_post',
   'linkedin_comment',
+  'twitter_post',
+  'facebook_post',
   'manual_submission',
   'event_feedback',
   'email_consented',

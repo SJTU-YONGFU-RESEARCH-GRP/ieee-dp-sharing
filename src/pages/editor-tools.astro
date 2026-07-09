@@ -1,0 +1,137 @@
+---
+import fs from 'node:fs';
+import path from 'node:path';
+import Layout from '../layouts/Layout.astro';
+import { IEEE_DATAPORT_HASHTAG_SEARCH } from '../lib/linkedin';
+
+const bookmarkletPath = path.join(process.cwd(), 'public/tools/bookmarklet.href');
+const bookmarkletHref = fs.existsSync(bookmarkletPath)
+  ? fs.readFileSync(bookmarkletPath, 'utf8').trim()
+  : '';
+---
+
+<Layout
+  title="Editor tools · IEEE DataPort Member Voices"
+  description="Bookmarklet and intake tools for editorial #ieeedataport curation."
+>
+  <section class="hero">
+    <h1>Editor tools</h1>
+    <p>
+      Human-in-the-loop helpers for curating public <strong>#ieeedataport</strong> posts.
+      These tools do not scrape LinkedIn automatically — you browse and capture with consent.
+    </p>
+  </section>
+
+  <section class="panel">
+    <h2>1. LinkedIn capture bookmarklet</h2>
+    <p class="muted">
+      While logged into LinkedIn, open a post from
+      <a href={IEEE_DATAPORT_HASHTAG_SEARCH} target="_blank" rel="noopener noreferrer">
+        #ieeedataport search
+      </a>,
+      then click the bookmarklet. A <code>linkedin-staging.csv</code> row is copied to your clipboard.
+    </p>
+
+    {bookmarkletHref ? (
+      <div class="bookmarklet-box">
+        <a class="bookmarklet-btn" href={bookmarkletHref}>
+          IEEE DP Capture
+        </a>
+        <p class="muted small">
+          Drag this button to your bookmarks bar (Chrome: show bookmarks bar → drag link).
+        </p>
+      </div>
+    ) : (
+      <p class="muted">
+        Bookmarklet not built yet. Run <code>python3 scripts/build_bookmarklet.py</code> before <code>npm run build</code>.
+      </p>
+    )}
+
+    <ol class="steps">
+      <li>Install the bookmarklet (drag link above).</li>
+      <li>Open a LinkedIn post that mentions IEEE DataPort or <code>#ieeedataport</code>.</li>
+      <li>Click <strong>IEEE DP Capture</strong> — CSV row copies to clipboard.</li>
+      <li>Paste into <code>data/linkedin-staging.csv</code> in the repo.</li>
+      <li>Commit and push, or wait for the daily pipeline after merge.</li>
+    </ol>
+  </section>
+
+  <section class="panel">
+    <h2>2. Member form import</h2>
+    <p class="muted">
+      Members can submit via the <a href={`${import.meta.env.BASE_URL}submit/`}>Submit page</a>,
+      a <a href="https://github.com/SJTU-YONGFU-RESEARCH-GRP/ieee-dp-sharing/issues/new?template=member-submission.yml">GitHub issue</a>,
+      or a Google Form. Download the form CSV and import:
+    </p>
+    <pre class="code-block">python3 scripts/import_form_export.py data/inbox/member-form-export.csv
+python3 scripts/merge_staging.py</pre>
+    <p class="muted">
+      See <code>docs/MEMBER_SUBMISSION.md</code> for Google Form field names and setup.
+    </p>
+  </section>
+
+  <section class="panel">
+    <h2>3. Automated imports</h2>
+    <ul>
+      <li><code>python3 scripts/import_ieee_stories.py</code> — all case studies in <code>data/ieee-story-sources.json</code></li>
+      <li><code>python3 scripts/twitter_import.py</code> — <code>@IEEEDataPort</code> (needs <code>TWITTER_BEARER_TOKEN</code>)</li>
+      <li><code>python3 scripts/facebook_import.py</code> — IEEE DataPort Page (needs <code>FACEBOOK_PAGE_ACCESS_TOKEN</code>)</li>
+      <li><code>python3 scripts/linkedin_import.py</code> — IEEE org page (needs LinkedIn API)</li>
+    </ul>
+  </section>
+
+  <section class="panel">
+    <h2>4. Pipeline commands</h2>
+    <ul>
+      <li><code>python3 scripts/merge_staging.py</code> — CSV → entries.json</li>
+      <li><code>python3 scripts/score_entries.py --apply</code> — content filter</li>
+      <li><code>python3 scripts/enrich.py</code> — sentiment/topics</li>
+      <li><code>./scripts/daily-pipeline.sh</code> — full refresh + deploy trigger</li>
+    </ul>
+  </section>
+</Layout>
+
+<style>
+  .bookmarklet-box {
+    margin: 1rem 0;
+    padding: 1rem;
+    background: var(--accent-soft);
+    border-radius: 8px;
+  }
+
+  .bookmarklet-btn {
+    display: inline-block;
+    background: var(--accent);
+    color: white !important;
+    text-decoration: none;
+    font-weight: 700;
+    padding: 0.65rem 1.1rem;
+    border-radius: 8px;
+  }
+
+  .small {
+    font-size: 0.88rem;
+    margin: 0.6rem 0 0;
+  }
+
+  .steps {
+    margin: 0.5rem 0 0;
+    padding-left: 1.2rem;
+    color: var(--muted);
+  }
+
+  .code-block {
+    background: #0f1722;
+    color: #e8eef7;
+    padding: 0.85rem 1rem;
+    border-radius: 8px;
+    overflow-x: auto;
+    font-size: 0.85rem;
+  }
+
+  ul {
+    margin: 0;
+    padding-left: 1.2rem;
+    color: var(--muted);
+  }
+</style>

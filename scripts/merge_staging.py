@@ -27,6 +27,8 @@ ROOT = Path(__file__).resolve().parent.parent
 ENTRIES_PATH = ROOT / "data" / "entries.json"
 CSV_PATH = ROOT / "data" / "linkedin-staging.csv"
 JSON_STAGING_PATH = ROOT / "data" / "linkedin-staging.json"
+TWITTER_STAGING_PATH = ROOT / "data" / "twitter-staging.json"
+FACEBOOK_STAGING_PATH = ROOT / "data" / "facebook-staging.json"
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from blocklist import blocklist_reason, is_blocklisted  # noqa: E402
@@ -143,6 +145,11 @@ def entry_id_for_url(url: str, display_name: str) -> str:
     return f"li-{slugify(display_name, 32)}-{digest}"
 
 
+def entry_id_for_submission(display_name: str, text: str, found_date: str) -> str:
+    digest = hashlib.sha1(f"{display_name}|{text[:80]}|{found_date}".encode("utf-8")).hexdigest()[:10]
+    return f"ms-{slugify(display_name, 32)}-{digest}"
+
+
 def nullable(value: str | None) -> str | None:
     if value is None:
         return None
@@ -177,16 +184,28 @@ def consent_from_observed(observed: str | None) -> tuple[str, str | None]:
 
 
 def row_to_entry(row: dict, *, auto_publish: bool) -> dict:
-    post_url = normalize_url(row.get("post_url"))
-    if not post_url:
-        raise ValueError("post_url is required")
-
     display_name = nullable(row.get("display_name"))
     text = nullable(row.get("text"))
     if not display_name or not text:
         raise ValueError("display_name and text are required")
 
     found_date = nullable(row.get("found_date")) or date.today().isoformat()
+    consent_observed = nullable(row.get("consent_observed")) or "unknown"
+    post_url = normalize_url(row.get("post_url"))
+
+    if not post_url:
+        if consent_observed != "author_submitted":
+            raise ValueError("post_url is required unless consent_observed=author_submitted")
+        source_type = "manual_submission"
+        entry_id = entry_id_for_submission(display_name, text, found_date)
+    else:
+        entry_id = entry_id_for_url(post_url, display_name)
+        if is_placeholder_source_url(post_url):
+            post_url = None
+            source_type = "manual_submission"
+        else:
+            source_type = "linkedin_post"
+
     post_type = nullable(row.get("post_type"))
     if post_type and post_type.lower() not in POST_TYPES:
         post_type = None
@@ -199,14 +218,10 @@ def row_to_entry(row: dict, *, auto_publish: bool) -> dict:
     if editor_notes:
         consent_note = f"{consent_note} Editor: {editor_notes}"
 
-    entry_id = entry_id_for_url(post_url, display_name)
     hashtag = nullable(row.get("hashtag"))
-
-    if is_placeholder_source_url(post_url) or "seed sample" in (editor_notes or "").lower():
+    if "seed sample" in (editor_notes or "").lower() and post_url:
         post_url = None
         source_type = "manual_submission"
-    else:
-        source_type = "linkedin_post"
 
     entry = {
         "id": entry_id,
@@ -322,11 +337,17 @@ def merge_csv_rows(data: dict, *, auto_publish: bool) -> tuple[int, int, int, in
     return added, skipped, errors, blocklisted
 
 
-def merge_json_staging(data: dict, *, auto_publish: bool) -> tuple[int, int]:
-    if not JSON_STAGING_PATH.exists():
+def merge_json_staging_file(
+    data: dict,
+    staging_path: Path,
+    *,
+    auto_publish: bool,
+    label: str,
+) -> tuple[int, int]:
+    if not staging_path.exists():
         return 0, 0
 
-    with JSON_STAGING_PATH.open(encoding="utf-8") as f:
+    with staging_path.open(encoding="utf-8") as f:
         staging = json.load(f)
 
     raw_entries = staging.get("entries", [])
@@ -340,7 +361,19 @@ def merge_json_staging(data: dict, *, auto_publish: bool) -> tuple[int, int]:
             continue
 
         try:
-            if "source_url" in raw and "display_name" in raw:
+            if raw.get("source_type") in {
+                "twitter_post",
+                "facebook_post",
+                "linkedin_post",
+            } and raw.get("id"):
+                entry = dict(raw)
+                entry.setdefault("moderation_status", "approved")
+                entry.setdefault("consent_status", "granted")
+                if auto_publish and entry.get("moderation_status") == "pending":
+                    apply_auto_publish(entry)
+            elif "display_name" in raw and "text" in raw and not raw.get("source_type"):
+                entry = row_to_entry(raw, auto_publish=auto_publish)
+            elif "source_url" in raw and "display_name" in raw:
                 entry = row_to_entry(raw, auto_publish=auto_publish)
             else:
                 entry = raw
@@ -376,7 +409,25 @@ def merge_json_staging(data: dict, *, auto_publish: bool) -> tuple[int, int]:
             urls.add(url)
         added += 1
 
+    if added:
+        print(f"  merged {added} from {label} ({skipped} skipped)")
     return added, skipped
+
+
+def merge_json_staging(data: dict, *, auto_publish: bool) -> tuple[int, int]:
+    linkedin_added, linkedin_skipped = merge_json_staging_file(
+        data, JSON_STAGING_PATH, auto_publish=auto_publish, label="linkedin-staging.json"
+    )
+    twitter_added, twitter_skipped = merge_json_staging_file(
+        data, TWITTER_STAGING_PATH, auto_publish=auto_publish, label="twitter-staging.json"
+    )
+    facebook_added, facebook_skipped = merge_json_staging_file(
+        data, FACEBOOK_STAGING_PATH, auto_publish=auto_publish, label="facebook-staging.json"
+    )
+    return (
+        linkedin_added + twitter_added + facebook_added,
+        linkedin_skipped + twitter_skipped + facebook_skipped,
+    )
 
 
 def main() -> int:

@@ -3,9 +3,9 @@
   "data_updated_at": "2026-07-09",
   "auto_publish": true,
   "content_filter_enabled": true,
-  "published_count": 0,
+  "published_count": 10,
   "pending_count": 0,
-  "total_entries": 0,
+  "total_entries": 10,
   "blocklist_count": 0,
   "staging_queue_rows": 0
 }
