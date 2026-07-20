@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "updated_at": "2026-07-19",
+  "updated_at": "2026-07-20",
   "entries": [
     {
       "id": "aqsa-abu-bakar-nust-2024",
@@ -19,9 +19,9 @@
       "consent_note": "Public member story on ieee-dataport.org or transmitter.ieee.org; republished with attribution for editorial showcase.",
       "moderation_status": "approved",
       "approved_by": "ieee-story-import",
-      "approved_at": "2026-07-19",
+      "approved_at": "2026-07-20",
       "submitted_at": "2024-01-01",
-      "published_at": "2026-07-19",
+      "published_at": "2026-07-20",
       "featured": true,
       "tags": [
         "citation",
@@ -39,7 +39,7 @@
           "reproducibility"
         ],
         "quote": "It is a valuable platform for securely storing, sharing, and citing research data, and it supports open research and collaboration within the research community.",
-        "enriched_at": "2026-07-19T08:26:14Z"
+        "enriched_at": "2026-07-20T09:24:09Z"
       }
     },
     {
@@ -59,9 +59,9 @@
       "consent_note": "Public member story on ieee-dataport.org or transmitter.ieee.org; republished with attribution for editorial showcase.",
       "moderation_status": "approved",
       "approved_by": "ieee-story-import",
-      "approved_at": "2026-07-19",
+      "approved_at": "2026-07-20",
       "submitted_at": "2024-01-01",
-      "published_at": "2026-07-19",
+      "published_at": "2026-07-20",
       "featured": false,
       "tags": [
         "discovery",
@@ -78,7 +78,7 @@
           "reproducibility"
         ],
         "quote": "A benefit of IEEE DataPort is its visibility, as it is accessible to the entire IEEE community and, through the open access option, by any interested researcher.",
-        "enriched_at": "2026-07-19T08:26:14Z"
+        "enriched_at": "2026-07-20T09:24:09Z"
       }
     },
     {
@@ -98,9 +98,9 @@
       "consent_note": "Public member story on ieee-dataport.org or transmitter.ieee.org; republished with attribution for editorial showcase.",
       "moderation_status": "approved",
       "approved_by": "ieee-story-import",
-      "approved_at": "2026-07-19",
+      "approved_at": "2026-07-20",
       "submitted_at": "2024-01-01",
-      "published_at": "2026-07-19",
+      "published_at": "2026-07-20",
       "featured": false,
       "tags": [
         "citation",
@@ -116,7 +116,7 @@
           "usability"
         ],
         "quote": "This DOI provides a permanent and an actionable source of truth for my data, making it easy for any researcher to find.",
-        "enriched_at": "2026-07-19T08:26:14Z"
+        "enriched_at": "2026-07-20T09:24:09Z"
       }
     },
     {
@@ -136,9 +136,9 @@
       "consent_note": "Public member story on ieee-dataport.org or transmitter.ieee.org; republished with attribution for editorial showcase.",
       "moderation_status": "approved",
       "approved_by": "ieee-story-import",
-      "approved_at": "2026-07-19",
+      "approved_at": "2026-07-20",
       "submitted_at": "2024-01-01",
-      "published_at": "2026-07-19",
+      "published_at": "2026-07-20",
       "featured": false,
       "tags": [
         "community",
@@ -154,7 +154,7 @@
           "open-data"
         ],
         "quote": "It was also equally important for me to join the data community, access other research datasets, and receive information on recent datasets and news regularly.",
-        "enriched_at": "2026-07-19T08:26:14Z"
+        "enriched_at": "2026-07-20T09:24:09Z"
       }
     },
     {
@@ -174,9 +174,9 @@
       "consent_note": "Public member story on ieee-dataport.org or transmitter.ieee.org; republished with attribution for editorial showcase.",
       "moderation_status": "approved",
       "approved_by": "ieee-story-import",
-      "approved_at": "2026-07-19",
+      "approved_at": "2026-07-20",
       "submitted_at": "2024-01-01",
-      "published_at": "2026-07-19",
+      "published_at": "2026-07-20",
       "featured": false,
       "tags": [
         "community",
@@ -192,7 +192,7 @@
           "open-data"
         ],
         "quote": "For a dataset on a virus that has affected the entire world, it is incredibly valuable to have the global public reach afforded by the IEEE DataPort Platform and the IEEE community.",
-        "enriched_at": "2026-07-19T08:26:14Z"
+        "enriched_at": "2026-07-20T09:24:09Z"
       }
     },
     {
